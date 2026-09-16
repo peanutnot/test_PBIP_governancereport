@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "Bookmarkf412b85d6c6290078a68"
+    },
+    {
+      "name": "Bookmarkf43440fda6266604142e"
+    },
+    {
+      "name": "Bookmarkfa984b567e167bc7e8b6"
+    },
+    {
+      "name": "Bookmark28ac0a39a61f79331fab",
+      "displayName": "Operations",
+      "children": [
+        "Bookmarka77dce83947318971f42",
+        "Bookmark4f3ffcf78b032a9574b5",
+        "Bookmark79d3fbf0cfd437a9f7f1"
+      ]
+    },
+    {
+      "name": "Bookmark9e802bd4067da6318340",
+      "displayName": "Operation - Refresh Trend",
+      "children": [
+        "Bookmark968ca43cadffe88737a3",
+        "Bookmark5265e7beeda16db1f90e"
+      ]
+    },
+    {
+      "name": "Bookmark7753543545e5e29e9a27"
+    },
+    {
+      "name": "Bookmarkeb1f159933a09556c8b8"
+    }
+  ]
+}

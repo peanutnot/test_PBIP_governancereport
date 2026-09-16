@@ -1,0 +1,217 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "TOTAL",
+  "name": "Bookmarkf412b85d6c6290078a68",
+  "options": {
+    "targetVisualNames": [],
+    "suppressActiveSection": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "ReportSection",
+    "filters": {
+      "byExpr": [
+        {
+          "name": "Filter596a69a0680462a1ea1d",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "public v_dim_pbicapacity"
+                }
+              },
+              "Property": "Capacity"
+            }
+          },
+          "howCreated": 1
+        },
+        {
+          "name": "Filter5f43d7e3cea426d2f597",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "public v_dim_pbicapacity"
+                }
+              },
+              "Property": "District"
+            }
+          },
+          "howCreated": 1
+        },
+        {
+          "name": "Filter3aecc01567e01947b30e",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "public v_dim_pbicapacity"
+                }
+              },
+              "Property": "Environment"
+            }
+          },
+          "howCreated": 1
+        },
+        {
+          "name": "Filterf169fcb8e932adabd106",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "Calendar"
+                }
+              },
+              "Property": "YearMonthNo"
+            }
+          },
+          "howCreated": 1
+        },
+        {
+          "name": "Filter64766d417fca0d53c492",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "public v_dim_pbiworkspaces"
+                }
+              },
+              "Property": "Workspace Name"
+            }
+          },
+          "howCreated": 1
+        },
+        {
+          "name": "Filterb0fbfb8cc39c0b510750",
+          "type": "Categorical",
+          "expression": {
+            "Column": {
+              "Expression": {
+                "SourceRef": {
+                  "Entity": "public v_dim_pbireport"
+                }
+              },
+              "Property": "Report Name"
+            }
+          },
+          "howCreated": 1
+        }
+      ]
+    },
+    "sections": {
+      "ReportSection": {
+        "filters": {
+          "byName": {
+            "Filter37f05d20407e90c81293": {
+              "name": "Filter37f05d20407e90c81293",
+              "type": "Categorical",
+              "filter": {
+                "Version": 2,
+                "From": [
+                  {
+                    "Name": "p",
+                    "Entity": "public v_dim_pbicapacity",
+                    "Type": 0
+                  }
+                ],
+                "Where": [
+                  {
+                    "Condition": {
+                      "Not": {
+                        "Expression": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "p"
+                                    }
+                                  },
+                                  "Property": "Capacity"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "null"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                ]
+              },
+              "expression": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "public v_dim_pbicapacity"
+                    }
+                  },
+                  "Property": "Capacity"
+                }
+              },
+              "howCreated": 1
+            }
+          }
+        },
+        "visualContainers": {
+          "eb8173bf11068b5c333a": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "objects": {}
+            }
+          },
+          "5cb390abcd10e85e8c00": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "objects": {}
+            }
+          },
+          "2703e8587d5d3a54ad5a": {
+            "singleVisual": {
+              "visualType": "actionButton",
+              "objects": {}
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              },
+              "visible": {
+                "expr": {
+                  "Literal": {
+                    "Value": "true"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
