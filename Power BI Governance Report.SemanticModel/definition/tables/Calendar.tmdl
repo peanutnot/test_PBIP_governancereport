@@ -13,6 +13,9 @@ table Calendar
 		formatString: 0
 		lineageTag: b44a64bb-57be-4756-bbc1-3253e5fe9124
 
+	measure 度量值 = "it's a new measure"
+		lineageTag: b62c5d25-72cc-4bb8-94fc-855dca63c3c2
+
 	column Year
 		formatString: 0
 		lineageTag: eb461abe-7b6c-4027-8210-cc7dc56396a7
