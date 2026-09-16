@@ -1,0 +1,130 @@
+table 'public v_dim_pbidataset'
+	lineageTag: f892b705-de2d-4452-ad18-2d86f198ae62
+
+	column datasetid
+		dataType: string
+		lineageTag: 6fc6ea2f-12fb-4b37-8bf4-1252b2dd2e0d
+		summarizeBy: none
+		sourceColumn: datasetid
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetname
+		dataType: string
+		lineageTag: 33ab2e8d-c10d-4021-882e-f22dac2b4689
+		summarizeBy: none
+		sourceColumn: datasetname
+
+		annotation SummarizationSetBy = Automatic
+
+	column district
+		dataType: string
+		lineageTag: 550e8776-8330-4238-8b02-ecb66ef6e2dd
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid
+		dataType: string
+		lineageTag: 2c73c4a9-be04-46d3-9c2d-feccb6eba265
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetowner
+		dataType: string
+		lineageTag: 17eaae9a-9d83-4f43-819d-0cb4ebec16b7
+		summarizeBy: none
+		sourceColumn: datasetowner
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_publish_by
+		dataType: string
+		lineageTag: 46e1bd3b-1969-4517-9b8c-776a6df6ed8e
+		summarizeBy: none
+		sourceColumn: last_publish_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetcreationmonth
+		dataType: string
+		lineageTag: 4917ab38-eac9-4f97-bc54-bf50003f38f5
+		summarizeBy: none
+		sourceColumn: datasetcreationmonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_log =
+			
+			VAR datasetid = [datasetid]
+			VAR RESULT = CALCULATE(MAX('public v_fact_pbiactivity'[activitydate]), 'public v_fact_pbiactivity'[datasetid] = datasetid )
+			RETURN RESULT
+		lineageTag: 1c868a20-e7ee-41a6-ad2f-b49cc077d870
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column existing_duration = ```
+			
+			VAR datasetid = [datasetid]
+			VAR createmonth = [datasetcreationmonth]
+			VAR RESULT = SWITCH(TRUE(),
+			createmonth>=[3_months_before], "Active",
+			createmonth<[12_months_before],  "> 12 months", 
+			createmonth<[6_months_before], "> 6 months", 
+			createmonth<[3_months_before], "> 3 months", 
+			"Active")
+			return RESULT
+			```
+		lineageTag: 27ba1143-7782-40f8-97a0-f210514f22df
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column inactive_duration = ```
+			
+			VAR datasetid = [datasetid]
+			VAR last_log = [last_log]
+			VAR reportcreation = CALCULATE(SELECTEDVALUE('public v_dim_pbireport'[reportcreationmonth]),  'public v_dim_pbireport'[reportid] = datasetid)
+			VAR RESULT = SWITCH(TRUE(),
+			reportcreation>=[3_months_before], "Active",
+			last_log<[12_months_before],  "> 12 months/never accessed", 
+			last_log<[6_months_before], "> 6 months", 
+			last_log<[3_months_before], "> 3 months", 
+			"Active")
+			return RESULT
+			```
+		lineageTag: 0049bac2-e4ed-40a2-abd6-b1846b39d8b4
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column model_size_in_mbs
+		dataType: int64
+		formatString: 0
+		lineageTag: dc753fc4-8e5d-4ece-b0ac-495403f03424
+		summarizeBy: sum
+		sourceColumn: model_size_in_mbs
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetdeletemonth
+		dataType: string
+		lineageTag: de4be1b8-2156-4982-ae8a-cfaf4e77750e
+		summarizeBy: none
+		sourceColumn: datasetdeletemonth
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_dim_pbidataset-b4d453c4-1069-4f48-87ed-f520a18c1711' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_dim_pbidataset = Source{[Schema="public",Item="v_dim_pbidataset"]}[Data]
+				in
+				    public_v_dim_pbidataset
+

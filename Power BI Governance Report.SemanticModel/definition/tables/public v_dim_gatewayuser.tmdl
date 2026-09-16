@@ -1,0 +1,84 @@
+table 'public v_dim_gatewayuser'
+	lineageTag: a1941056-89ff-4b55-a233-3921762cba4e
+
+	column gatewayid
+		dataType: string
+		lineageTag: 6f4a2375-56e5-40d6-91b6-e189acb7db6c
+		summarizeBy: none
+		sourceColumn: gatewayid
+
+		annotation SummarizationSetBy = Automatic
+
+	column gatewayname
+		dataType: string
+		lineageTag: 18dc05a1-280f-4b17-a8c8-9506c10deca9
+		summarizeBy: none
+		sourceColumn: gatewayname
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasourceid
+		dataType: string
+		lineageTag: 0d2dfa12-bead-421c-87d8-71fdf8c5ac81
+		summarizeBy: none
+		sourceColumn: datasourceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasourcename
+		dataType: string
+		lineageTag: 32263ffa-6f7a-4ef6-a9dd-0b33351ef325
+		summarizeBy: none
+		sourceColumn: datasourcename
+
+		annotation SummarizationSetBy = Automatic
+
+	column emailaddress
+		dataType: string
+		lineageTag: 72d87786-e799-4315-a052-35924663b370
+		summarizeBy: none
+		sourceColumn: emailaddress
+
+		annotation SummarizationSetBy = Automatic
+
+	column displayname
+		dataType: string
+		lineageTag: ccdff201-5fbc-4841-a3ed-6ab695742774
+		summarizeBy: none
+		sourceColumn: displayname
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasourceaccessright
+		dataType: string
+		lineageTag: 74ffb21a-4571-40aa-9ec2-e1f9f9b83372
+		summarizeBy: none
+		sourceColumn: datasourceaccessright
+
+		annotation SummarizationSetBy = Automatic
+
+	column district
+		dataType: string
+		lineageTag: ed741d4d-12f5-435d-9f33-fd05c7c89ef7
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column principaltype
+		dataType: string
+		lineageTag: a25bd7d8-903a-40e6-9fe7-cdf507896706
+		summarizeBy: none
+		sourceColumn: principaltype
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_dim_gatewayuser-9351c89b-42c1-4ebd-9ffd-3fc909c85a92' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_dim_gatewayuser = Source{[Schema="public",Item="v_dim_gatewayuser"]}[Data]
+				in
+				    public_v_dim_gatewayuser
+

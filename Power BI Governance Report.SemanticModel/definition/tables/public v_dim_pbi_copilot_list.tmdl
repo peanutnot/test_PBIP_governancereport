@@ -1,0 +1,82 @@
+table 'public v_dim_pbi_copilot_list'
+	lineageTag: 9969c2ec-b93a-4e06-bac7-923ccf9aa43d
+
+	column member_id
+		dataType: string
+		lineageTag: aab9092a-850f-4505-b36b-b05d6acf5ec5
+		summarizeBy: none
+		sourceColumn: member_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column display_name
+		dataType: string
+		lineageTag: 2cf46900-9493-4995-9e95-1c814720300d
+		summarizeBy: none
+		sourceColumn: display_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column itcode
+		dataType: string
+		lineageTag: b1f1bc85-72ab-4271-a7b7-5cda3125424d
+		summarizeBy: none
+		sourceColumn: itcode
+
+		annotation SummarizationSetBy = Automatic
+
+	column add_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 14193cf8-2251-446a-bf9e-e6779c2acf5d
+		summarizeBy: none
+		sourceColumn: add_date
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Function
+		dataType: string
+		lineageTag: f88459ea-15b2-468c-8aa2-0999b6230f2a
+		summarizeBy: none
+		sourceColumn: Function
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_group
+		dataType: string
+		lineageTag: 1ea054fd-a4ba-4b08-be5f-92b5c25f20cb
+		summarizeBy: none
+		sourceColumn: business_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column geo
+		dataType: string
+		lineageTag: 9efb0d00-099d-47dc-be3d-002db82343ae
+		summarizeBy: none
+		sourceColumn: geo
+
+		annotation SummarizationSetBy = Automatic
+
+	column add_month
+		dataType: string
+		lineageTag: 021f751b-d916-4bbe-83b7-6b8cf26d9910
+		summarizeBy: none
+		sourceColumn: add_month
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_dim_pbi_copilot_list' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_dim_pbi_copilot_list = Source{[Schema="public",Item="v_dim_pbi_copilot_list"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(public_v_dim_pbi_copilot_list,{{"function", "Function"}})
+				in
+				    #"Renamed Columns"
+

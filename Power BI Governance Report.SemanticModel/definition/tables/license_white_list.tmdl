@@ -1,0 +1,40 @@
+table license_white_list
+	isHidden
+	lineageTag: abc35cfc-9e73-494b-849f-5a68d338b721
+
+	column userid
+		dataType: string
+		isHidden
+		lineageTag: f75a5191-6769-45aa-a303-20d7c332d224
+		summarizeBy: none
+		sourceColumn: userid
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'exemption reason'
+		dataType: string
+		lineageTag: 9c0c7af4-5264-46bc-8e4c-5bf9a9a5b802
+		summarizeBy: none
+		sourceColumn: exemption reason
+
+		annotation SummarizationSetBy = Automatic
+
+	partition license_white_list-c931ab83-02a7-4298-a010-2b4cc77a04c3 = m
+		mode: import
+		queryGroup: 'BICP Tables'
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    pro_license_holder_Sheet = Source{[Schema="public",Item="pbi_pro_license_whitelist"]}[Data],
+				    #"Changed Type1" = Table.TransformColumnTypes(pro_license_holder_Sheet,{{"userid", type text}})
+				in
+				    #"Changed Type1"
+
+	changedProperty = IsHidden
+
+	annotation PBI_ResultType = Exception
+
+	annotation PBI_NavigationStepName = 导航
+

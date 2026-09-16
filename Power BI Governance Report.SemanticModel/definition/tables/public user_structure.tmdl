@@ -1,0 +1,259 @@
+table 'public user_structure'
+	lineageTag: 8c1de59b-6429-4919-8d26-c6c8238c4b5c
+
+	column id
+		dataType: int64
+		formatString: 0
+		lineageTag: a9295c1f-984f-41ca-b83f-891093293d35
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column userid
+		dataType: string
+		lineageTag: 84bad5fb-7a21-40d1-bada-375fe58f0536
+		summarizeBy: none
+		sourceColumn: userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager1
+		dataType: string
+		lineageTag: afb0dfc0-1955-4956-8a45-aade3b9d26d9
+		summarizeBy: none
+		sourceColumn: manager1
+
+		annotation SummarizationSetBy = Automatic
+
+	column department1
+		dataType: string
+		lineageTag: a35ec348-7cff-417c-9ef9-e20ac200e177
+		summarizeBy: none
+		sourceColumn: department1
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager2
+		dataType: string
+		lineageTag: c63c91d9-8377-4611-80d1-10b70d98f5ed
+		summarizeBy: none
+		sourceColumn: manager2
+
+		annotation SummarizationSetBy = Automatic
+
+	column department2
+		dataType: string
+		lineageTag: 84411bee-3908-44fa-b025-d3d893a1b1f8
+		summarizeBy: none
+		sourceColumn: department2
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager3
+		dataType: string
+		lineageTag: 73653a4f-143d-430e-a2ad-056d2c28584a
+		summarizeBy: none
+		sourceColumn: manager3
+
+		annotation SummarizationSetBy = Automatic
+
+	column department3
+		dataType: string
+		lineageTag: ccd7650a-ef37-46f2-89ab-6507b956a575
+		summarizeBy: none
+		sourceColumn: department3
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager4
+		dataType: string
+		lineageTag: bf7e1432-e732-44df-a42d-b1d76f63287d
+		summarizeBy: none
+		sourceColumn: manager4
+
+		annotation SummarizationSetBy = Automatic
+
+	column department4
+		dataType: string
+		lineageTag: b07e7f88-fe27-4bfc-8499-381df5821733
+		summarizeBy: none
+		sourceColumn: department4
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager5
+		dataType: string
+		lineageTag: 37c36254-bc46-41f5-8253-3aa2b12fb3b8
+		summarizeBy: none
+		sourceColumn: manager5
+
+		annotation SummarizationSetBy = Automatic
+
+	column department5
+		dataType: string
+		lineageTag: 18bfc879-c1c0-4da4-910e-3ce8bcbaad14
+		summarizeBy: none
+		sourceColumn: department5
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager6
+		dataType: string
+		lineageTag: 47fded2c-ca42-4aca-83d6-56f01c07e50c
+		summarizeBy: none
+		sourceColumn: manager6
+
+		annotation SummarizationSetBy = Automatic
+
+	column department6
+		dataType: string
+		lineageTag: ec014085-39ed-4dd5-9782-f3c4e6a53cc7
+		summarizeBy: none
+		sourceColumn: department6
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager7
+		dataType: string
+		lineageTag: 8db6e717-6737-47c4-93ed-899c798ef196
+		summarizeBy: none
+		sourceColumn: manager7
+
+		annotation SummarizationSetBy = Automatic
+
+	column department7
+		dataType: string
+		lineageTag: 18983e8a-bd51-40bc-8787-b0db01b22393
+		summarizeBy: none
+		sourceColumn: department7
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager8
+		dataType: string
+		lineageTag: 90421847-3884-4ddc-9cd9-4481246b2ebc
+		summarizeBy: none
+		sourceColumn: manager8
+
+		annotation SummarizationSetBy = Automatic
+
+	column department8
+		dataType: string
+		lineageTag: 5dc01677-b4b8-4e75-8aa4-d2850be275a0
+		summarizeBy: none
+		sourceColumn: department8
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager9
+		dataType: string
+		lineageTag: e8602e0b-7f26-42ab-a730-446f2ded1c47
+		summarizeBy: none
+		sourceColumn: manager9
+
+		annotation SummarizationSetBy = Automatic
+
+	column department9
+		dataType: string
+		lineageTag: 7bfd463e-f77f-40ba-8991-79fa4f28a2a9
+		summarizeBy: none
+		sourceColumn: department9
+
+		annotation SummarizationSetBy = Automatic
+
+	column manager10
+		dataType: string
+		lineageTag: 30e8e549-cbb7-44ac-a48e-28019187714a
+		summarizeBy: none
+		sourceColumn: manager10
+
+		annotation SummarizationSetBy = Automatic
+
+	column department10
+		dataType: string
+		lineageTag: fe9dd080-8052-43e0-9d52-07e53f7a99be
+		summarizeBy: none
+		sourceColumn: department10
+
+		annotation SummarizationSetBy = Automatic
+
+	column department
+		dataType: string
+		lineageTag: 2b0912a6-dc20-4b8c-80cb-8d5964ddf1ef
+		summarizeBy: none
+		sourceColumn: department
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: 463afa99-92eb-4a35-bd22-94d139eeb5b4
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column title
+		dataType: string
+		lineageTag: c5d74815-f494-4ba7-8d4e-1a606de46efb
+		summarizeBy: none
+		sourceColumn: title
+
+		annotation SummarizationSetBy = Automatic
+
+	column chinesename
+		dataType: string
+		lineageTag: 16bf0744-34dc-4d53-89b0-8353b7c32d4f
+		summarizeBy: none
+		sourceColumn: chinesename
+
+		annotation SummarizationSetBy = Automatic
+
+	column geo
+		dataType: string
+		lineageTag: f5d46ea7-c805-4ba3-9e5b-3d5f9331a0ba
+		summarizeBy: none
+		sourceColumn: geo
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 28aa8daa-7161-4c00-b160-4c3ad7231aa6
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column mail
+		dataType: string
+		lineageTag: 13e39119-53c1-4144-b5ec-bf8118de6589
+		summarizeBy: none
+		sourceColumn: mail
+
+		annotation SummarizationSetBy = Automatic
+
+	column updatetime
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ae7f72e5-3e41-47ec-942b-75d97a17489e
+		summarizeBy: none
+		sourceColumn: updatetime
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public user_structure' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_user_structure = Source{[Schema="public",Item="user_structure"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(public_user_structure, each [mail] <> null and [mail] <> "")
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,68 @@
+table 'public v_aggr_serviceprincipal_log'
+	lineageTag: 88d2085c-0597-46d8-ae4e-0c61803672d1
+
+	column userid
+		dataType: string
+		lineageTag: 4bd9d3c9-f83d-4887-b5f1-6e26408a353a
+		summarizeBy: none
+		sourceColumn: userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column useragent
+		dataType: string
+		lineageTag: 219c3205-ef4f-485a-87c2-68758b9b0044
+		summarizeBy: none
+		sourceColumn: useragent
+
+		annotation SummarizationSetBy = Automatic
+
+	column activity
+		dataType: string
+		lineageTag: cd9a4d9d-c8f1-4cab-a703-e0311d3e7cff
+		summarizeBy: none
+		sourceColumn: activity
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitymonth
+		dataType: string
+		lineageTag: 80393639-dce4-49da-adf1-b03f6d1d1c79
+		summarizeBy: none
+		sourceColumn: activitymonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitydate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 8a9ea0cf-f987-4001-86c2-14ea09af5eb1
+		summarizeBy: none
+		sourceColumn: activitydate
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column vol
+		dataType: int64
+		formatString: 0
+		lineageTag: 349e256a-f7f7-4980-b059-2458f82bcd1e
+		summarizeBy: sum
+		sourceColumn: vol
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_aggr_serviceprincipal_log-a4c5ce40-90b0-493b-8fab-9fc7cd542ec6' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_aggr_serviceprincipal_log = Source{[Schema="public",Item="v_aggr_serviceprincipal_log"]}[Data]
+				in
+				    public_v_aggr_serviceprincipal_log
+
+	annotation PBI_ResultType = Exception
+

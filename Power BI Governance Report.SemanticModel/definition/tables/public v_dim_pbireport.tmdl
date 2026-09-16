@@ -1,0 +1,327 @@
+table 'public v_dim_pbireport'
+	lineageTag: ad912f0b-9b92-4108-8181-1ef0448507df
+
+	column reportid
+		dataType: string
+		lineageTag: 28e2cb66-3565-41ec-be5e-75eb94b61aa7
+		summarizeBy: none
+		sourceColumn: reportid
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Report Name'
+		dataType: string
+		lineageTag: a9bccdc8-9918-4bfd-a95c-ccd518efa658
+		summarizeBy: none
+		sourceColumn: Report Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid
+		dataType: string
+		lineageTag: 51a96cd2-730a-43b8-84b9-6bfe56091448
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportcreationmonth
+		dataType: string
+		lineageTag: 077c3283-2081-43c3-b9eb-4c522dcfb18d
+		summarizeBy: none
+		sourceColumn: reportcreationmonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetid
+		dataType: string
+		lineageTag: 7eaf80ab-902e-47fc-9ae1-e3e474176364
+		summarizeBy: none
+		sourceColumn: datasetid
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_view =
+			
+			VAR reportid = [reportid]
+			VAR RESULT = CALCULATE(MAX('public v_fact_pbiactivity'[activitydate]), 'public v_fact_pbiactivity'[reportid] = reportid,'public v_fact_pbiactivity'[activity] = "ViewReport" )
+			RETURN RESULT
+		lineageTag: 5b9c8e2c-b3da-4c72-94fc-01caa2ce343f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column inactive_duration = ```
+			
+			VAR reportid = [reportid]
+			VAR last_view = [last_view]
+			VAR reportcreation = CALCULATE(SELECTEDVALUE('public v_dim_pbireport'[reportcreationmonth]),  'public v_dim_pbireport'[reportid] = reportid)
+			VAR RESULT = SWITCH(TRUE(),
+			reportcreation>=[3_months_before], "Active",
+			last_view<[12_months_before],  "> 12 months/never accessed", 
+			last_view<[6_months_before], "> 6 months", 
+			last_view<[3_months_before], "> 3 months", 
+			"Active")
+			return RESULT
+			```
+		lineageTag: a91b2a53-9fd2-4ceb-b41d-c1920aeb0ba0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column existing_duration = ```
+			
+			VAR reportid = [reportid]
+			VAR createmonth = [reportcreationmonth]
+			VAR RESULT = SWITCH(TRUE(),
+			createmonth>=[3_months_before], "Active",
+			createmonth<[12_months_before],  "> 12 months", 
+			createmonth<[6_months_before], "> 6 months", 
+			createmonth<[3_months_before], "> 3 months", 
+			"Active")
+			return RESULT
+			```
+		lineageTag: 87565e3c-655d-4c30-b119-27379d190628
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportowner
+		dataType: string
+		lineageTag: c940c330-cc73-40d5-a97a-ed8c4e9d0c4f
+		summarizeBy: none
+		sourceColumn: reportowner
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_publish_by
+		dataType: string
+		lineageTag: 75a9c3ed-68f4-4e78-b673-f68c66b1a070
+		summarizeBy: none
+		sourceColumn: last_publish_by
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportdeletemonth
+		dataType: string
+		lineageTag: 8552b276-5636-4224-9aa3-951843370e7f
+		summarizeBy: none
+		sourceColumn: reportdeletemonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column DeleteSameMonth = if([reportdeletemonth] <> BLANK() && [ReportCreateDate]=[reportdeletemonth],"Y",BLANK())
+		lineageTag: d5b549ef-2071-4837-a953-39fbfd32e312
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column district
+		dataType: string
+		lineageTag: abb53206-cb76-4df2-b4cd-a9a5fa42db9d
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportcreationdate
+		dataType: string
+		lineageTag: e4083333-643d-4569-9036-5342fbcdea33
+		summarizeBy: none
+		sourceColumn: reportcreationdate
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportdeletedate
+		dataType: string
+		lineageTag: 63e03fab-7328-4242-8b6f-5de354ee23e4
+		summarizeBy: none
+		sourceColumn: reportdeletedate
+
+		annotation SummarizationSetBy = Automatic
+
+	column reporttype
+		dataType: string
+		lineageTag: ba6f3e03-2bed-48e8-9ba7-c9847c3f3efa
+		summarizeBy: none
+		sourceColumn: reporttype
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: d0ebbd89-ba0b-4b5a-92f7-65d7947099ff
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'manager 2' = LOOKUPVALUE('public user_structure'[manager2],'public user_structure'[userid],'public v_dim_pbireport'[ReportName_])
+		lineageTag: f9d3331c-d2cb-469c-886b-f0ba75c2c021
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'manager 3' = LOOKUPVALUE('public user_structure'[manager3],'public user_structure'[userid],'public v_dim_pbireport'[ReportName_])
+		lineageTag: 11c46474-af7f-4996-895c-2583d870e4d0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'manager 4' = LOOKUPVALUE('public user_structure'[manager4],'public user_structure'[userid],'public v_dim_pbireport'[ReportName_])
+		lineageTag: 05d88926-9a0f-455f-be5d-786a130bbc66
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'manager2 name' =
+			
+			VAR temp = LOOKUPVALUE('public dim_user_structure'[name],'public dim_user_structure'[userid],'public v_dim_pbireport'[manager 2])
+			VAR managersname = if (
+			    temp = BLANK(),
+			    "Unknown",
+			    temp)
+			RETURN managersname
+		lineageTag: 94727fb7-af33-4b91-9b80-0248c6ee37ab
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column geo = ```
+			
+			var temp = LOOKUPVALUE('public v_dim_pbiworkspaces'[geo_raw],'public v_dim_pbiworkspaces'[workspaceid],'public v_dim_pbireport'[workspaceid])
+			VAR geo = IF(
+			    temp = "NA" ||
+			    temp = "PRC" ||
+			    temp = "EMEA" ||
+			    temp = "AP" ||
+			    temp = "LA" ||
+			    temp = BLANK(),
+			    temp,
+			    "No Record"
+			)
+			RETURN geo
+			
+			```
+		lineageTag: 61861c53-04bf-4081-9f24-6f24f4baf75f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year = YEAR('public v_dim_pbireport'[reportcreationdate])
+		formatString: 0
+		lineageTag: 8da77c2b-1959-4767-82d6-42a94a4687fa
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'manager3 name' = LOOKUPVALUE('public dim_user_structure'[name],'public dim_user_structure'[userid],'public v_dim_pbireport'[manager 3])
+		lineageTag: 34bc0232-5ea4-4bf6-b14b-8bacf385cbc0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'manager4 name' = LOOKUPVALUE('public dim_user_structure'[name],'public dim_user_structure'[userid],'public v_dim_pbireport'[manager 4])
+		lineageTag: ac23cd54-ebe5-45cb-b62d-beb7e115dcf0
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Userid
+		dataType: string
+		lineageTag: a8bde963-a467-4196-b46d-6a9c0aa08088
+		summarizeBy: none
+		sourceColumn: Userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column Replace_ReportOwner =
+			
+			VAR workspaceowner = LOOKUPVALUE('public v_dim_pbiworkspaces'[WorkspaceOwnerID],'public v_dim_pbiworkspaces'[workspaceid],'public v_dim_pbireport'[workspaceid])
+			VAR Replace_ReportOwner = IF(ISBLANK([reportowner]),
+			                                workspaceowner,
+			                                "null")
+			RETURN Replace_ReportOwner
+		lineageTag: aefd701a-1cd3-418e-8e9d-541d09662627
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReportName_ =
+			IF(ISBLANK('public v_dim_pbireport'[reportowner]),
+			                        'public v_dim_pbireport'[Replace_ReportOwner],
+			                        [Userid])
+		lineageTag: 4db7e5ac-badd-4d9c-b3f6-c75275731812
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'department 2' =
+			
+			VAR temp = LOOKUPVALUE('public user_structure'[department2],'public user_structure'[userid],'public v_dim_pbireport'[ReportName_])
+			VAR department_name = IF(
+			    ISBLANK(temp),
+			    "Unknown",
+			    temp)
+			RETURN department_name
+		lineageTag: a949f7ae-a7d6-4080-ab22-71afa1b2bc9a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'department 3' =
+			
+			VAR temp = LOOKUPVALUE('public user_structure'[department3],'public user_structure'[userid],'public v_dim_pbireport'[ReportName_])
+			VAR department_name = IF(
+			    ISBLANK(temp),
+			    "Unknown",
+			    temp)
+			RETURN department_name
+		lineageTag: ff9c5021-3606-4fcf-8b94-29a015b6f5c2
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column contact
+		dataType: string
+		lineageTag: 4a3cee03-7c82-43f7-81b6-a468efc06714
+		summarizeBy: none
+		sourceColumn: contact
+
+		annotation SummarizationSetBy = Automatic
+
+	column modelsize = LOOKUPVALUE('public v_dim_pbidataset'[model_size_in_mbs],'public v_dim_pbidataset'[datasetid],'public v_dim_pbireport'[datasetid])
+		formatString: 0
+		lineageTag: f6158314-045a-459f-8a45-b063be8558ca
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy manager2&3
+		lineageTag: 24b3b277-60b6-42d6-b01b-93366825be45
+
+		level 'manager2 name'
+			lineageTag: 6e613258-065a-41b3-85d8-6a4aa39e5311
+			column: 'manager2 name'
+
+		level 'manager3 name'
+			lineageTag: e2edaedd-a723-4cc0-9cc8-2a926ecb2491
+			column: 'manager3 name'
+
+	partition 'public v_dim_pbireport-6888042f-167d-4025-b451-36cecf7bc7b9' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_dim_pbireport = Source{[Schema="public",Item="v_dim_pbireport"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(public_v_dim_pbireport,{{"reportname", "Report Name"}}),
+				    #"Inserted Text Before Delimiter" = Table.AddColumn(#"Renamed Columns", "Userid", each Text.BeforeDelimiter([reportowner], "@"), type text),
+				    #"Filtered Rows" = Table.SelectRows(#"Inserted Text Before Delimiter", each [reportid] <> "c83abdd8-7c91-4769-9d4d-32e756b01e0e" and [reportid] <> "088d3c5d-ba68-4f4d-aaed-ea42fd98f84a" and [reportid] <> "7680f2f7-90ef-4a25-a3b6-5c89cc3bae8f" and [reportid] <> "c0cc9631-2fb0-4d15-9483-3a33fe9341fe" and [reportid] <> "79b2ffe3-0eb2-4466-aebd-1f6847423078" and [reportid] <> "0a06df3d-169d-4888-bdd6-714e4148daa7" and [reportid] <> "b0afe174-a6bc-4406-bb22-79e7d49e127a" and [reportid] <> "df6c29b0-0447-4721-84ed-2c9f2a96e63d" and [reportid] <> "432997e0-3969-47fd-adaa-e6ef6a0b8fb3"),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Filtered Rows",{{"reportcontact", "contact"}})
+				in
+				    #"Renamed Columns1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

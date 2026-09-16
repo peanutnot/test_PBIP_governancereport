@@ -1,0 +1,175 @@
+table pbimonitorlog
+	lineageTag: 9308207e-364e-4e90-bb3d-98b504b8e7f4
+
+	column monitor_name
+		dataType: string
+		lineageTag: d9098567-2e00-416f-bb1e-86b67bfb9732
+		summarizeBy: none
+		sourceColumn: monitor_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaces
+		dataType: double
+		formatString: 0
+		lineageTag: 6ed335d2-e333-4686-a9ce-aae9e981ea43
+		summarizeBy: sum
+		sourceColumn: workspaces
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column datasets
+		dataType: double
+		formatString: 0
+		lineageTag: cd7bc97a-1bd0-422b-b191-e8fb9223282b
+		summarizeBy: sum
+		sourceColumn: datasets
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column datasetowners
+		dataType: double
+		formatString: 0
+		lineageTag: f427020d-4ed3-435a-8e06-795fc40c10e9
+		summarizeBy: sum
+		sourceColumn: datasetowners
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column frequency
+		dataType: string
+		lineageTag: 9367c687-a2c2-42b7-9ab3-bc48742f2d75
+		summarizeBy: none
+		sourceColumn: frequency
+
+		annotation SummarizationSetBy = Automatic
+
+	column updatetime
+		dataType: string
+		lineageTag: defec117-a096-4e36-bf8a-35746eaebb8b
+		summarizeBy: none
+		sourceColumn: updatetime
+
+		annotation SummarizationSetBy = Automatic
+
+	column ID
+		dataType: int64
+		formatString: 0
+		lineageTag: 71a4431a-266d-412a-90a9-39895cb7f5ce
+		summarizeBy: count
+		sourceColumn: ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Modified
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ee258a99-2984-4efa-97ad-b8fb646bc4ad
+		summarizeBy: none
+		sourceColumn: Modified
+
+		annotation SummarizationSetBy = Automatic
+
+	column cleanup_datasets
+		dataType: double
+		formatString: 0
+		lineageTag: bb5695a8-bd73-44f7-abe8-9c838ec815d7
+		summarizeBy: sum
+		sourceColumn: cleanup_datasets
+
+		annotation SummarizationSetBy = Automatic
+
+	column cleanup_reports
+		dataType: double
+		formatString: 0
+		lineageTag: 9de00db0-368e-4405-8c52-965a03110add
+		summarizeBy: sum
+		sourceColumn: cleanup_reports
+
+		annotation SummarizationSetBy = Automatic
+
+	column recycle_license
+		dataType: double
+		formatString: 0
+		lineageTag: d98a305c-3208-41f9-949e-5cb06dc65313
+		summarizeBy: sum
+		sourceColumn: recycle_license
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column district
+		dataType: string
+		lineageTag: 68f5cb99-6b46-424b-a78a-4e6ca580a64e
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column reports
+		dataType: string
+		lineageTag: 68bad4d7-aace-4d06-99c9-b2f309f2c356
+		summarizeBy: none
+		sourceColumn: reports
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportowners
+		dataType: string
+		lineageTag: 6eaa1787-5e89-429a-9857-c772008867b4
+		summarizeBy: none
+		sourceColumn: reportowners
+
+		annotation SummarizationSetBy = Automatic
+
+	column monitordate
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 756c3657-0c8f-4c55-a4c7-8340ff89df15
+		summarizeBy: none
+		sourceColumn: monitordate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column FY =
+			switch(true,
+			MONTH([monitordate])>3, "FY" & right(YEAR([monitordate]),2) & right(YEAR([monitordate])+1,2),
+			"FY" &  right(YEAR([monitordate]) - 1,2 )  & right(YEAR([monitordate]),2 ))
+		lineageTag: 8f4d2159-0c79-471e-9175-4bfd915d6507
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column identified_reports
+		dataType: double
+		formatString: 0
+		lineageTag: 0d53060c-b6f0-4fe8-baa8-06ed7bca7914
+		summarizeBy: sum
+		sourceColumn: identified_reports
+
+		annotation SummarizationSetBy = Automatic
+
+	partition pbimonitorlog = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Tables("https://lenovo.sharepoint.com/sites/pbiplatform-en", [Implementation="2.0", ViewMode="Default"]),
+				    #"5ff6bc69-d943-41e0-8a54-c667ad01bdca" = Source{[Id="5ff6bc69-d943-41e0-8a54-c667ad01bdca"]}[Items],
+				    #"Inserted Text Before Delimiter" = Table.AddColumn(#"5ff6bc69-d943-41e0-8a54-c667ad01bdca", "monitordate", each Text.BeforeDelimiter([updatetime], " "), type text),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Inserted Text Before Delimiter",{{"monitordate", type date}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

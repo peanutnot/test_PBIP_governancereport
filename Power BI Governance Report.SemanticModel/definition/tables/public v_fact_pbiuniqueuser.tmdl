@@ -1,0 +1,84 @@
+table 'public v_fact_pbiuniqueuser'
+	lineageTag: b26d779d-662a-4385-b036-ed6d69aed5bb
+
+	column itcode
+		dataType: string
+		lineageTag: 1ef3658b-449a-43f2-8566-21ce4ce93bdc
+		summarizeBy: none
+		sourceColumn: itcode
+
+		annotation SummarizationSetBy = Automatic
+
+	column userid
+		dataType: string
+		lineageTag: bfb0a5a1-ac68-4c0a-b0a5-d1549c4c69e6
+		summarizeBy: none
+		sourceColumn: userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid
+		dataType: string
+		lineageTag: 06822b1c-6158-40c3-bd6e-db9f8e3e8b1b
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacityid
+		dataType: string
+		lineageTag: 272f2e09-d96a-48f4-8bb4-9ba3ac19f647
+		summarizeBy: none
+		sourceColumn: capacityid
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacityname
+		dataType: string
+		lineageTag: 305ae4e5-2c86-470f-961d-3fc6eac06ce5
+		summarizeBy: none
+		sourceColumn: capacityname
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitymonth
+		dataType: string
+		lineageTag: 7feb512c-9d79-4e8d-9d83-12eca1a6094d
+		summarizeBy: none
+		sourceColumn: activitymonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitydate
+		dataType: string
+		lineageTag: 8db3f89f-6ee9-4056-b3eb-1fbe5327ceed
+		summarizeBy: none
+		sourceColumn: activitydate
+
+		annotation SummarizationSetBy = Automatic
+
+	column sourcefrom
+		dataType: string
+		lineageTag: 4dbbd06b-a2bb-4037-bf0e-c69ea39a26ad
+		summarizeBy: none
+		sourceColumn: sourcefrom
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceuserid = CONCATENATE([workspaceid],[itcode])
+		lineageTag: ac0bc9bf-5010-4677-9ee2-6ecb4e503552
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_fact_pbiuniqueuser-1c6955fb-b3a6-488c-9fd2-f476175b457f' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_fact_pbiuniqueuser = Source{[Schema="public",Item="v_fact_pbiuniqueuser"]}[Data]
+				in
+				    public_v_fact_pbiuniqueuser
+
+	annotation PBI_ResultType = Exception
+

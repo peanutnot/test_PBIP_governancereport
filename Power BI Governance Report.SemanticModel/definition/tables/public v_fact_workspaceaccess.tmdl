@@ -1,0 +1,81 @@
+table 'public v_fact_workspaceaccess'
+	lineageTag: f3fd7d0c-7d39-480d-a4ff-e815c57b1534
+
+	column workspaceid
+		dataType: string
+		lineageTag: fb8bd590-bfee-4b97-ac90-207e49e39663
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column emailaddress
+		dataType: string
+		lineageTag: 2a567180-83d6-4fa1-bfa1-9d1351ca34bb
+		summarizeBy: none
+		sourceColumn: emailaddress
+
+		annotation SummarizationSetBy = Automatic
+
+	column itcode
+		dataType: string
+		lineageTag: 93fd8b11-47ce-474a-9d3a-5fc54cb9dbf0
+		summarizeBy: none
+		sourceColumn: itcode
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'access role'
+		dataType: string
+		lineageTag: 72199466-becb-46e1-8364-4762658ceee2
+		summarizeBy: none
+		sourceColumn: access role
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceuserid = CONCATENATE([workspaceid],[itcode])
+		lineageTag: b4680d27-5102-405c-aac3-d11426319492
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_access =
+			
+			VAR workspaceuserid = 'public v_fact_workspaceaccess'[workspaceuserid]
+			VAR RESULT = CALCULATE(MAX('public v_fact_pbiuniqueuser'[activitymonth]), 'public v_fact_pbiuniqueuser'[workspaceuserid] = workspaceuserid)
+			RETURN RESULT
+		lineageTag: a3ddc6ae-c566-40bf-b0cb-9221a7b217b8
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column inactive_duration = ```
+			
+			VAR workspaceid = [workspaceid]
+			VAR last_access = [last_access]
+			VAR workspacecreation = CALCULATE(SELECTEDVALUE('public v_dim_pbiworkspaces'[workspacecreationmonth]),  'public v_dim_pbiworkspaces'[workspaceid] = workspaceid)
+			VAR RESULT = SWITCH(TRUE(),
+			workspacecreation>=[3_months_before], "Active",
+			coalesce(last_access,workspacecreation)<[12_months_before],  "> 12 months/never accessed", 
+			coalesce(last_access,workspacecreation)<[6_months_before], "> 6 months", 
+			coalesce(last_access,workspacecreation)<[3_months_before], "> 3 months", 
+			"Active")
+			return RESULT
+			```
+		lineageTag: 5d104d14-5c0d-4c2e-bebc-1d30a0e8920f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_fact_workspaceaccess-b84a7cbf-eed9-4158-b2ee-e213592973fa' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_fact_workspaceaccess = Source{[Schema="public",Item="v_fact_workspaceaccess"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(public_v_fact_workspaceaccess,{{"groupuseraccessright", "access role"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Exception
+

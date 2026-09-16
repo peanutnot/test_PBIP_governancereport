@@ -1,0 +1,339 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 210,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 831.09638292358375,
+            "y": 654.67234709147215
+          },
+          "nodeIndex": "Calendar",
+          "nodeLineageTag": "0ab4c756-bc63-445c-aa5b-032db0432fa2",
+          "size": {
+            "height": 245.96789934387323,
+            "width": 234
+          },
+          "zIndex": 24
+        },
+        {
+          "location": {
+            "x": 1168.7826724521913,
+            "y": 0
+          },
+          "nodeIndex": "public v_dim_pbicapacity",
+          "nodeLineageTag": "bb5b6d3a-7b53-4c81-bc5d-701617b35402",
+          "size": {
+            "height": 241.72450690409335,
+            "width": 234
+          },
+          "zIndex": 27
+        },
+        {
+          "location": {
+            "x": 575.42694273030736,
+            "y": 0
+          },
+          "nodeIndex": "public v_dim_pbireport",
+          "nodeLineageTag": "ad912f0b-9b92-4108-8181-1ef0448507df",
+          "size": {
+            "height": 250.05081853169776,
+            "width": 234
+          },
+          "zIndex": 12
+        },
+        {
+          "location": {
+            "x": 864.78672709472676,
+            "y": 5.0203944767252722
+          },
+          "nodeIndex": "public v_dim_pbiworkspaces",
+          "size": {
+            "height": 251.30591715087911,
+            "width": 234
+          },
+          "zIndex": 11
+        },
+        {
+          "location": {
+            "x": 814.604541255493,
+            "y": 309.74189986612919
+          },
+          "nodeIndex": "public v_fact_workspaceaccess",
+          "size": {
+            "height": 242.52022681660986,
+            "width": 236
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 248.49752463602721,
+            "y": 328.28619331461562
+          },
+          "nodeIndex": "public v_fact_pbiactivity",
+          "nodeLineageTag": "c5df1833-6f39-4470-aee0-210f3b9831b0",
+          "size": {
+            "height": 244.23470414245594,
+            "width": 234
+          },
+          "zIndex": 18
+        },
+        {
+          "location": {
+            "x": 1.2550986191811262,
+            "y": 312.419260393676
+          },
+          "nodeIndex": "public v_fact_pbirepublish",
+          "size": {
+            "height": 246,
+            "width": 234
+          },
+          "zIndex": 17
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 589.53832910429458
+          },
+          "nodeIndex": "dim pro_license_holder",
+          "nodeLineageTag": "a2c339d4-9bf1-4f07-803b-66470c5d1571",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 23
+        },
+        {
+          "location": {
+            "x": 527.02043401448361,
+            "y": 299.96856998433503
+          },
+          "nodeIndex": "public v_fact_pbiuniqueuser",
+          "nodeLineageTag": "b26d779d-662a-4385-b036-ed6d69aed5bb",
+          "size": {
+            "height": 243.28585799438463,
+            "width": 234
+          },
+          "zIndex": 16
+        },
+        {
+          "location": {
+            "x": 1667.5749290802817,
+            "y": 18.826479287719721
+          },
+          "nodeIndex": "public v_dim_reportaccess",
+          "nodeLineageTag": "e6c0df23-fc61-4fff-b212-2af64645890e",
+          "size": {
+            "height": 224.45937870666495,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 313.77465479532947,
+            "y": 2.510197238362645
+          },
+          "nodeIndex": "public v_dim_pbidataset",
+          "size": {
+            "height": 248.30625247110987,
+            "width": 234
+          },
+          "zIndex": 15
+        },
+        {
+          "location": {
+            "x": 7.53059171508788,
+            "y": 2.5101972383626396
+          },
+          "nodeIndex": "public v_dim_pbi_datasourcelineage",
+          "nodeLineageTag": "df5683b2-60dd-4835-9134-f28a2b20f164",
+          "size": {
+            "height": 243.52056213684068,
+            "width": 234
+          },
+          "zIndex": 13
+        },
+        {
+          "location": {
+            "x": 260.85148520907745,
+            "y": 590.86347461826028
+          },
+          "nodeIndex": "MeasureTable",
+          "nodeLineageTag": "cafdf9b1-ad9d-46a4-932e-5d81d0cb22b3",
+          "size": {
+            "height": 245.18355029052748,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 898.65061133382358
+          },
+          "nodeIndex": "public dim_user_structure",
+          "nodeLineageTag": "1d1de3df-c99b-4654-8913-ba76a04bdaf3",
+          "size": {
+            "height": 389.25661403950278,
+            "width": 234
+          },
+          "zIndex": 22
+        },
+        {
+          "location": {
+            "x": 1388.5949211496979,
+            "y": 308.75426031860417
+          },
+          "nodeIndex": "public v_fact_serviceprincipal_log",
+          "nodeLineageTag": "ffe5f83b-65c3-4d80-a331-47d9a7aa9f76",
+          "size": {
+            "height": 238.50016766011538,
+            "width": 240.27549309590654
+          },
+          "zIndex": 19
+        },
+        {
+          "location": {
+            "x": 1419.2000635056556,
+            "y": 12.550986191813175
+          },
+          "nodeIndex": "v_dim_service_principal",
+          "nodeLineageTag": "b9d2552c-2ed6-4e97-b6f5-c8406379b02f",
+          "size": {
+            "height": 228.22467456420884,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 1857.0187574133297,
+            "y": 302.47876722269757
+          },
+          "nodeIndex": "public v_aggr_serviceprincipal_log",
+          "size": {
+            "height": 241.5713806685385,
+            "width": 234
+          },
+          "zIndex": 14
+        },
+        {
+          "location": {
+            "x": 1596.7670107612682,
+            "y": 577.34536482340627
+          },
+          "nodeIndex": "license_white_list",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 263.25655727819247,
+            "y": 852.21196242411463
+          },
+          "nodeIndex": "public v_dim_gatewayuser",
+          "size": {
+            "height": 272,
+            "width": 230.23470414245605
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 2253.2,
+            "y": 0
+          },
+          "nodeIndex": "User_Active",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 1152.8262230430059,
+            "y": 769.37545355814791
+          },
+          "nodeIndex": "pbimonitorlog",
+          "nodeLineageTag": "9308207e-364e-4e90-bb3d-98b504b8e7f4",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 21
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 1277.0120264852931
+          },
+          "nodeIndex": "public v_dim_pbi_copilot_list",
+          "nodeLineageTag": "9969c2ec-b93a-4e06-bac7-923ccf9aa43d",
+          "size": {
+            "height": 243.62219920023608,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 1943.4222222222218,
+            "y": 730.31711284276457
+          },
+          "nodeIndex": "public user_structure",
+          "nodeLineageTag": "8c1de59b-6429-4919-8d26-c6c8238c4b5c",
+          "size": {
+            "height": 856.56176484835328,
+            "width": 234
+          },
+          "zIndex": 26
+        },
+        {
+          "location": {
+            "x": 1469.1999999999998,
+            "y": 754.31711284276457
+          },
+          "nodeIndex": "public v_fact_pbi_dataset_similarity",
+          "nodeLineageTag": "6bf284bc-2049-4e33-bc36-426532b960fa",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 25
+        },
+        {
+          "location": {
+            "x": 2194.7,
+            "y": 696.18943884555893
+          },
+          "nodeIndex": "public v_check_workspace_owner_new",
+          "nodeLineageTag": "49717f13-e564-4c14-a8d6-fd988893d1a7",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "所有表",
+      "zoomValue": 80,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "所有表",
+  "defaultDiagram": "所有表"
+}

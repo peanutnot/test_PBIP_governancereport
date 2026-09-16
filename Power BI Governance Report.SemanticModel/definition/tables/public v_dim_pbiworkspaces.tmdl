@@ -1,0 +1,181 @@
+table 'public v_dim_pbiworkspaces'
+	lineageTag: 7c897c5c-4c0f-4656-8f14-e94273015b65
+
+	column workspaceid
+		dataType: string
+		lineageTag: f05c8f5e-d777-454c-9db5-20b9a7da6eea
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacityid
+		dataType: string
+		lineageTag: 39720f1d-53c6-4abd-ac69-a906c98aab9a
+		summarizeBy: none
+		sourceColumn: capacityid
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Workspace Name'
+		dataType: string
+		lineageTag: eacf8ca5-7031-4e24-8bb7-91ca0f1282a0
+		summarizeBy: none
+		sourceColumn: Workspace Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspacecreationmonth
+		dataType: string
+		lineageTag: c72f46bb-acf0-47d2-b636-70eefb67088e
+		summarizeBy: none
+		sourceColumn: workspacecreationmonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Deployment Date' = FORMAT ( [WorkspaceCreateMonth], "mmm.YYYY" )
+		lineageTag: 366de6fe-cf83-4e11-a945-12d71dad644f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column group_name
+		dataType: string
+		lineageTag: e51c785d-ee44-4e6a-a3bd-c22bd7ba89c3
+		summarizeBy: none
+		sourceColumn: group_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column geo
+		dataType: string
+		lineageTag: 142199e9-44ab-463b-acd9-50ecd1c5c396
+		summarizeBy: none
+		sourceColumn: geo
+
+		annotation SummarizationSetBy = Automatic
+
+	column func_name
+		dataType: string
+		lineageTag: 0f1ead02-7476-4f83-b429-04b14e6b80e1
+		summarizeBy: none
+		sourceColumn: func_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_visit =
+			
+			VAR workspaceid = [workspaceid]
+			VAR RESULT = CALCULATE(MAX('public v_fact_pbiuniqueuser'[activitydate]), 'public v_fact_pbiuniqueuser'[workspaceid] = workspaceid )
+			RETURN RESULT
+		lineageTag: 1e751aa3-598c-46f8-8326-f263a617e74f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column inactive_duration = ```
+			
+			VAR workspaceid = [workspaceid]
+			VAR last_visit = [last_visit]
+			VAR workspacecreation = CALCULATE(SELECTEDVALUE('public v_dim_pbiworkspaces'[workspacecreationmonth]),  'public v_dim_pbiworkspaces'[workspaceid] = workspaceid)
+			VAR last_visit_revised = if(last_visit = BLANK(), workspacecreation, last_visit)
+			VAR RESULT = SWITCH(TRUE(),
+			workspacecreation>=[3_months_before], "Active",
+			last_visit_revised<[12_months_before],  "> 12 months/never accessed", 
+			last_visit_revised<[6_months_before], "> 6 months", 
+			last_visit_revised<[3_months_before], "> 3 months", 
+			"Active")
+			return RESULT
+			```
+		lineageTag: 9d3c04ce-01d1-4e56-bf09-50f4f74bad97
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportsinworkspace = [ReportNA]
+		formatString: 0
+		lineageTag: eaa938d0-5067-455f-9c78-5b2a3901a0c0
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Environment
+		dataType: string
+		lineageTag: 340e4d9c-c0c7-403c-a2a0-e2d84de12e96
+		summarizeBy: none
+		sourceColumn: Environment
+
+		annotation SummarizationSetBy = Automatic
+
+	column district
+		dataType: string
+		lineageTag: dacc2f6e-3b2e-449c-a16f-9c4d49be2d6d
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column geo_raw
+		dataType: string
+		lineageTag: afa50e07-436c-435b-9ade-ccef6ac72c6b
+		summarizeBy: none
+		sourceColumn: geo_raw
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacityname
+		dataType: string
+		lineageTag: f1228ba3-030c-4047-9e20-36ad35ddea40
+		summarizeBy: none
+		sourceColumn: capacityname
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceowner
+		dataType: string
+		lineageTag: 72ea517c-89a0-43e4-a617-0c8ab5f4df58
+		summarizeBy: none
+		sourceColumn: workspaceowner
+
+		annotation SummarizationSetBy = Automatic
+
+	column owneraccess
+		dataType: string
+		lineageTag: be8db533-273a-4f5a-a258-bd8032d237da
+		summarizeBy: none
+		sourceColumn: owneraccess
+
+		annotation SummarizationSetBy = Automatic
+
+	column WorkspaceOwnerID
+		dataType: string
+		lineageTag: 8a8dbe05-f052-403d-80c5-301c37d4d48e
+		summarizeBy: none
+		sourceColumn: WorkspaceOwnerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: f30b5306-8739-455a-a215-dc1e66bd185e
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_dim_pbiworkspaces-926d58c8-1d91-47dc-84ab-a3bcc0a98c71' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_dim_pbiworkspaces = Source{[Schema="public",Item="v_dim_pbiworkspaces"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(public_v_dim_pbiworkspaces,{{"workspacename", "Workspace Name"}, {"environment", "Environment"}}),
+				    #"Inserted Text Before Delimiter" = Table.AddColumn(#"Renamed Columns", "WorkspaceOwnerID", each Text.BeforeDelimiter([workspaceowner], "@"), type text),
+				    筛选的行 = Table.SelectRows(#"Inserted Text Before Delimiter", each ([Workspace Name] <> "Clean Up Archive_2" and [Workspace Name] <> "N2-N3-WS-TST" and [Workspace Name] <> "PBI-Platform-Feature" and [Workspace Name] <> "PBI_LenovoTST_SND" and [Workspace Name] <> "PBI_Platform_Demo" and [Workspace Name] <> "Power BI PlatformTST" and [Workspace Name] <> "testing_123" and [Workspace Name] <> "TST_1231_PRD"))
+				in
+				    筛选的行
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

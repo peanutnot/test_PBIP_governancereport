@@ -1,0 +1,81 @@
+table 'public v_dim_pbicapacity'
+	lineageTag: bb5b6d3a-7b53-4c81-bc5d-701617b35402
+
+	column capacityid
+		dataType: string
+		lineageTag: 66a96f24-edb5-492a-b610-a290aa079f96
+		summarizeBy: none
+		sourceColumn: capacityid
+
+		annotation SummarizationSetBy = Automatic
+
+	column sku
+		dataType: string
+		lineageTag: 1a280430-424a-4ddc-975a-bedbc2d1d754
+		summarizeBy: none
+		sourceColumn: sku
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: dafface4-ccaa-4965-9659-8a8e1c58e69f
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: 4f210950-0183-4df2-98ae-f7de2e72be82
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Environment
+		dataType: string
+		lineageTag: fa92e824-839d-423d-a248-2425bc08e6fa
+		summarizeBy: none
+		sourceColumn: Environment
+
+		annotation SummarizationSetBy = Automatic
+
+	column District
+		dataType: string
+		lineageTag: 55230e71-a559-47fb-8446-1788ec1e8fe7
+		summarizeBy: none
+		sourceColumn: District
+
+		annotation SummarizationSetBy = Automatic
+
+	column Capacity
+		dataType: string
+		lineageTag: 2766915a-2bb4-4fa9-9418-b4b3800cf8b8
+		summarizeBy: none
+		sourceColumn: Capacity
+
+		annotation SummarizationSetBy = Automatic
+
+	column allocation_mode
+		dataType: string
+		lineageTag: 2f68b5f2-090c-48e9-ae6b-ae0e9d35d4c0
+		summarizeBy: none
+		sourceColumn: allocation_mode
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_dim_pbicapacity-75e8ca32-2231-4a62-946a-10ffadddb356' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_dim_pbicapacity = Source{[Schema="public",Item="v_dim_pbicapacity"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(public_v_dim_pbicapacity,{{"district", "District"}, {"environment", "Environment"}, {"capacityname", "Capacity"}, {"region", "Region"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

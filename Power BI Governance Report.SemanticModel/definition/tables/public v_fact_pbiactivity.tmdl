@@ -1,0 +1,142 @@
+table 'public v_fact_pbiactivity'
+	lineageTag: c5df1833-6f39-4470-aee0-210f3b9831b0
+
+	column itcode
+		dataType: string
+		lineageTag: 6412eb2f-8c7c-4e20-94f7-17656c7c7dd5
+		summarizeBy: none
+		sourceColumn: itcode
+
+		annotation SummarizationSetBy = Automatic
+
+	column userid
+		dataType: string
+		lineageTag: d2a63650-7668-4fc0-84d4-f818b2458883
+		summarizeBy: none
+		sourceColumn: userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportid
+		dataType: string
+		lineageTag: a99273f2-67ab-45bc-8879-6896d0522a67
+		summarizeBy: none
+		sourceColumn: reportid
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid
+		dataType: string
+		lineageTag: d647b97f-90b4-4353-b74f-699c37f17fd0
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column activity
+		dataType: string
+		lineageTag: d5446f69-69be-4f9c-bf67-070f4ec97a2f
+		summarizeBy: none
+		sourceColumn: activity
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitymonth
+		dataType: string
+		lineageTag: 14c8d106-89f8-482f-ac69-f2021f3b216c
+		summarizeBy: none
+		sourceColumn: activitymonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column sourcefrom
+		dataType: string
+		lineageTag: 74b2ea31-d635-4261-99e0-45166ea99f96
+		summarizeBy: none
+		sourceColumn: sourcefrom
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitydate
+		dataType: string
+		lineageTag: ed9b8c49-b644-422a-9f43-6b4c6179cd87
+		summarizeBy: none
+		sourceColumn: activitydate
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportname
+		dataType: string
+		lineageTag: d16c364e-eea9-43dc-bda6-919a67853b8b
+		summarizeBy: none
+		sourceColumn: reportname
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetid
+		dataType: string
+		lineageTag: bdcf00f3-9813-4472-a8fd-473e31be5e6b
+		summarizeBy: none
+		sourceColumn: datasetid
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitytime
+		dataType: string
+		lineageTag: 2a20d1b2-bd68-4f60-890a-ad270fccc75d
+		summarizeBy: none
+		sourceColumn: activitytime
+
+		annotation SummarizationSetBy = Automatic
+
+	column dashboardname
+		dataType: string
+		lineageTag: b9e4287b-3248-4375-80d0-fd4fdae08b14
+		summarizeBy: none
+		sourceColumn: dashboardname
+
+		annotation SummarizationSetBy = Automatic
+
+	column dashboardid
+		dataType: string
+		lineageTag: a8fba0ec-a874-4aed-90b5-af313284e274
+		summarizeBy: none
+		sourceColumn: dashboardid
+
+		annotation SummarizationSetBy = Automatic
+
+	column appname
+		dataType: string
+		lineageTag: 8d2d8081-e610-4dbb-b7da-f29ea10fceee
+		summarizeBy: none
+		sourceColumn: appname
+
+		annotation SummarizationSetBy = Automatic
+
+	column distributionmethod
+		dataType: string
+		lineageTag: 0618a761-1d10-420e-8fd7-a6ef26ad9e7d
+		summarizeBy: none
+		sourceColumn: distributionmethod
+
+		annotation SummarizationSetBy = Automatic
+
+	column appreportid
+		dataType: string
+		lineageTag: e4ad25c3-68df-4ed7-b162-a947a599bbc9
+		summarizeBy: none
+		sourceColumn: appreportid
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_fact_pbiactivity-72d23d4d-8275-4a43-a97c-e36948f4767c' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_fact_pbiactivity = Source{[Schema="public",Item="v_fact_pbiactivity"]}[Data]
+				in
+				    public_v_fact_pbiactivity
+
+	annotation PBI_ResultType = Table
+

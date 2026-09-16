@@ -1,0 +1,106 @@
+table 'public v_fact_pbirepublish'
+	lineageTag: 0939537e-2a73-48c0-82cd-c939b14ed356
+
+	column itcode
+		dataType: string
+		lineageTag: 4bb65228-a4c2-4d6c-b0ae-bcb657f17fb0
+		summarizeBy: none
+		sourceColumn: itcode
+
+		annotation SummarizationSetBy = Automatic
+
+	column userid
+		dataType: string
+		lineageTag: 34a3096b-6c27-40bc-89aa-66d17885c50d
+		summarizeBy: none
+		sourceColumn: userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetid
+		dataType: string
+		lineageTag: 1d44ca41-0f69-4b1c-9c73-5a04d871ea3c
+		summarizeBy: none
+		sourceColumn: datasetid
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportid
+		dataType: string
+		lineageTag: 927589f8-b8fb-4fba-b55c-03dbaa916c5a
+		summarizeBy: none
+		sourceColumn: reportid
+
+		annotation SummarizationSetBy = Automatic
+
+	column republish
+		dataType: string
+		lineageTag: 5b86a3c9-ec66-4134-ad67-2d2910ef2b61
+		summarizeBy: none
+		sourceColumn: republish
+
+		annotation SummarizationSetBy = Automatic
+
+	column republishmonth
+		dataType: string
+		lineageTag: 0bac751f-82ac-49f0-a20b-e21a5ad0747d
+		summarizeBy: none
+		sourceColumn: republishmonth
+
+		changedProperty = FormatString
+
+		annotation SummarizationSetBy = Automatic
+
+	column republishdate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 9823c9eb-c061-4cf2-9bd6-ec08a51e2c78
+		summarizeBy: none
+		sourceColumn: republishdate
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column republishmonth_noreview =
+			
+			VAR RDATE = value([republishdate])
+			VAR RMONTH = [republishmonth]
+			VAR reportid = [reportid]
+			VAR LASTREVIEWDATE= CALCULATE(value(MAX('public v_fact_pbiactivity'[activitydate])),  'public v_dim_pbireport'[reportid] = reportid)
+			RETURN IF (RDATE > LASTREVIEWDATE, RMONTH, "1900-01-01")
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 476c9ac0-61bd-4c10-93f4-7480aec81feb
+		summarizeBy: none
+
+		changedProperty = DataType
+
+		changedProperty = FormatString
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column republishtime
+		dataType: string
+		lineageTag: 12349c86-0ed8-4f70-bd57-958927df9c65
+		summarizeBy: none
+		sourceColumn: republishtime
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_fact_pbirepublish-a05404af-822d-4d31-a57e-3e8c8ad337a6' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_fact_pbirepublish = Source{[Schema="public",Item="v_fact_pbirepublish"]}[Data],
+				    #"Changed Type" = Table.TransformColumnTypes(public_v_fact_pbirepublish,{{"republishdate", type datetime}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_ResultType = Table
+

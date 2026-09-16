@@ -1,0 +1,131 @@
+table 'public v_fact_serviceprincipal_log'
+	lineageTag: ffe5f83b-65c3-4d80-a331-47d9a7aa9f76
+
+	column userid
+		dataType: string
+		lineageTag: 3faba4e1-bccd-4bd3-8007-47613558080a
+		summarizeBy: none
+		sourceColumn: userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacityid
+		dataType: string
+		lineageTag: 5b80dabd-2d18-4521-a68c-603eb64f755f
+		summarizeBy: none
+		sourceColumn: capacityid
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacityname
+		dataType: string
+		lineageTag: 16c99302-3312-4f25-82d4-c9cae52ba0f6
+		summarizeBy: none
+		sourceColumn: capacityname
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid
+		dataType: string
+		lineageTag: 23ec60db-12e9-4c25-ada6-d813fe7bb18b
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column useragent
+		dataType: string
+		lineageTag: 37e3f5a8-7b4d-4e4f-a147-b6d17ebb0345
+		summarizeBy: none
+		sourceColumn: useragent
+
+		annotation SummarizationSetBy = Automatic
+
+	column activity
+		dataType: string
+		lineageTag: c529750d-7621-4a10-a770-857b1961d7a4
+		summarizeBy: none
+		sourceColumn: activity
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportid
+		dataType: string
+		lineageTag: ebac4088-2c61-4b04-bc7e-f0ef2c6213c9
+		summarizeBy: none
+		sourceColumn: reportid
+
+		annotation SummarizationSetBy = Automatic
+
+	column consumptionmethod
+		dataType: string
+		lineageTag: 7a924ffd-d5fa-49d8-a1e9-f0e7bf7f4d81
+		summarizeBy: none
+		sourceColumn: consumptionmethod
+
+		annotation SummarizationSetBy = Automatic
+
+	column dashboardid
+		dataType: string
+		lineageTag: 6e156ad1-8906-4a04-b487-25c4ec61159e
+		summarizeBy: none
+		sourceColumn: dashboardid
+
+		annotation SummarizationSetBy = Automatic
+
+	column dashboardname
+		dataType: string
+		lineageTag: a8b0ab26-836e-480a-b8a1-46242dbaa991
+		summarizeBy: none
+		sourceColumn: dashboardname
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitymonth
+		dataType: string
+		lineageTag: 3b45f9ff-7216-4ed7-9a7a-d6451de14bfb
+		summarizeBy: none
+		sourceColumn: activitymonth
+
+		annotation SummarizationSetBy = Automatic
+
+	column activitydate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 31341aee-5f7e-4650-9371-2c8e6dbc5f27
+		summarizeBy: none
+		sourceColumn: activitydate
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column creationtime
+		dataType: string
+		lineageTag: 36ac1e56-b44e-4d71-a922-2e3bf72a7ad3
+		summarizeBy: none
+		sourceColumn: creationtime
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspacename
+		dataType: string
+		lineageTag: c20ac251-6cd0-45ab-bccb-6ef07c0c9ebd
+		summarizeBy: none
+		sourceColumn: workspacename
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_fact_serviceprincipal_log-2542bfde-dce9-4935-af3b-68de34ab9336' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_fact_serviceprincipal_log = Source{[Schema="public",Item="v_fact_serviceprincipal_log"]}[Data]
+				in
+				    public_v_fact_serviceprincipal_log
+
+	annotation PBI_ResultType = Table
+

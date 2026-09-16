@@ -1,0 +1,172 @@
+table 'public v_dim_pbi_datasourcelineage'
+	lineageTag: df5683b2-60dd-4835-9134-f28a2b20f164
+
+	column district
+		dataType: string
+		lineageTag: 76560eef-9f40-4c57-b715-6d807dc5a7eb
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetid
+		dataType: string
+		lineageTag: ebe1c29a-9b86-4368-ad4b-d3f49d31f5b0
+		summarizeBy: none
+		sourceColumn: datasetid
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid
+		dataType: string
+		lineageTag: 027250a0-042d-4cb4-adcf-0656cbcd5c56
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasource
+		dataType: string
+		lineageTag: eed02e2c-7542-401d-8303-787161ac9e20
+		summarizeBy: none
+		sourceColumn: datasource
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasourcetype
+		dataType: string
+		lineageTag: c4740ed1-0637-406c-ba3a-d03a134c8bc7
+		summarizeBy: none
+		sourceColumn: datasourcetype
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasourceid
+		dataType: string
+		lineageTag: d0eb93ac-b28a-4fbf-942a-eae37ddcf2dd
+		summarizeBy: none
+		sourceColumn: datasourceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasourcename
+		dataType: string
+		lineageTag: 97514143-e176-4ba8-9be1-a86a9f67f93d
+		summarizeBy: none
+		sourceColumn: datasourcename
+
+		annotation SummarizationSetBy = Automatic
+
+	column connectiondetails
+		dataType: string
+		lineageTag: 8d80a7ed-7b5f-41d3-bfec-87fb5c637262
+		summarizeBy: none
+		sourceColumn: connectiondetails
+
+		annotation SummarizationSetBy = Automatic
+
+	column gatewayid
+		dataType: string
+		lineageTag: 444d44d8-05db-464b-a60a-7aff02541b3e
+		summarizeBy: none
+		sourceColumn: gatewayid
+
+		annotation SummarizationSetBy = Automatic
+
+	column gatewayname
+		dataType: string
+		lineageTag: a9244937-6a22-4139-a1cd-108e5bcf57ac
+		summarizeBy: none
+		sourceColumn: gatewayname
+
+		annotation SummarizationSetBy = Automatic
+
+	column gatewaystatus
+		dataType: string
+		lineageTag: 4e5f9f45-bd01-4325-a310-cf26b432aec0
+		summarizeBy: none
+		sourceColumn: gatewaystatus
+
+		annotation SummarizationSetBy = Automatic
+
+	column connectserver
+		dataType: string
+		lineageTag: b69daf19-9d32-41d2-99a6-c2514c65e4ec
+		summarizeBy: none
+		sourceColumn: connectserver
+
+		annotation SummarizationSetBy = Automatic
+
+	column connectdatabase
+		dataType: string
+		lineageTag: 199f07b1-e7af-4752-93b4-a64059ec68cc
+		summarizeBy: none
+		sourceColumn: connectdatabase
+
+		annotation SummarizationSetBy = Automatic
+
+	column connectionstring
+		dataType: string
+		lineageTag: 22692b45-4e76-4161-9394-b61a60f828ce
+		summarizeBy: none
+		sourceColumn: connectionstring
+
+		annotation SummarizationSetBy = Automatic
+
+	column connectpath
+		dataType: string
+		lineageTag: f9413130-47f4-49b4-8591-383977a4a83e
+		summarizeBy: none
+		sourceColumn: connectpath
+
+		annotation SummarizationSetBy = Automatic
+
+	column kind
+		dataType: string
+		lineageTag: 90ab3ba7-1336-4ee3-89b4-15ea180a55af
+		summarizeBy: none
+		sourceColumn: kind
+
+		annotation SummarizationSetBy = Automatic
+
+	column url
+		dataType: string
+		lineageTag: d9ab23a6-3cdf-4fbc-83f7-ea8a0d1c3bee
+		summarizeBy: none
+		sourceColumn: url
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportid
+		dataType: string
+		lineageTag: 1d113d09-3334-46c6-aa29-d49debe1ae59
+		summarizeBy: none
+		sourceColumn: reportid
+
+		annotation SummarizationSetBy = Automatic
+
+	column targetdatasetid
+		dataType: string
+		lineageTag: 5e558165-73fe-4eb9-8b7e-217d605f5ff0
+		summarizeBy: none
+		sourceColumn: targetdatasetid
+
+		annotation SummarizationSetBy = Automatic
+
+	column targetworkspaceid
+		dataType: string
+		lineageTag: b82f441d-35c6-4819-abec-3da6907c78c3
+		summarizeBy: none
+		sourceColumn: targetworkspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_dim_pbi_datasourcelineage-fece8d48-996c-4ed7-b130-12b9e545e6ad' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_dim_pbi_datasourcelineage = Source{[Schema="public",Item="v_dim_pbi_datasourcelineage"]}[Data]
+				in
+				    public_v_dim_pbi_datasourcelineage
+

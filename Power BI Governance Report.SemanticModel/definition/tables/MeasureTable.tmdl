@@ -1,0 +1,878 @@
+table MeasureTable
+	lineageTag: cafdf9b1-ad9d-46a4-932e-5d81d0cb22b3
+
+	measure 'Viewed Times' = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(COUNT('public v_fact_pbiactivity'[activity]),'public v_fact_pbiactivity'[activitymonth] = SELECTMONT  && 'public v_fact_pbiactivity'[activity]= "ViewReport" )
+			RETURN RESULT
+			
+			```
+		formatString: 0
+		displayFolder: Views
+		lineageTag: 3abb124f-f72d-461a-a41d-930f8ae0e022
+
+	measure Reports =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbireport'[reportid]),'public v_dim_pbireport'[reportcreationmonth]<= SELECTMONT&& OR ('public v_dim_pbireport'[reportdeletemonth]= blank() ,'public v_dim_pbireport'[reportdeletemonth]> SELECTMONT))
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Reports
+		lineageTag: 82ed3f2f-3016-41ba-a30c-182d0e744128
+
+		changedProperty = FormatString
+
+	measure SelectedMonth = MAX('Calendar'[YearMonthNo])
+		displayFolder: Times
+		lineageTag: 4aa7319c-a6f2-4da8-b6f0-a3f990cb2493
+
+	measure 'Workspace Volume' =
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbiworkspaces'[workspaceid]),'public v_dim_pbiworkspaces'[workspacecreationmonth]<= SELECTMONT)
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Workspaces
+		lineageTag: dd30fe14-d38f-4026-8e70-8fa955c5c010
+
+		changedProperty = FormatString
+
+	measure 'Unique Users' = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR )
+			RETURN RESULT
+			
+			```
+		formatString: #,0
+		displayFolder: Users
+		lineageTag: db966423-d272-4dfd-8a1b-1164be2ec188
+
+		changedProperty = FormatString
+
+	measure NodeVolume = calculate(DISTINCTCOUNT('public v_dim_pbicapacity'[Capacity]), FILTER(ALLSELECTED('public v_dim_pbicapacity'),'public v_dim_pbicapacity'[state] = "Active"))
+		formatString: 0
+		displayFolder: Capacity
+		lineageTag: 0f82c9a9-b40d-4957-8378-02fd85d424a6
+
+	measure 'New Users' = [Unique Users]-[PrevTotalUsers]
+		formatString: 0
+		displayFolder: Users
+		lineageTag: 7222badf-5bc2-42b3-b4b7-4b7edce7327b
+
+	measure PrevReportVolume =
+			
+			VAR SELECTMONT = [PreMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbireport'[reportid]),'public v_dim_pbireport'[reportcreationmonth]<= SELECTMONT&& OR ('public v_dim_pbireport'[reportdeletemonth]= blank() ,'public v_dim_pbireport'[reportdeletemonth]> SELECTMONT))
+			RETURN RESULT
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: e6086d70-1fab-42f6-bf55-d3771a785608
+
+	measure 'Increased Reports' = [Reports] - [PrevReportVolume]
+		displayFolder: Reports
+		lineageTag: b77f1e2e-48cf-4f7a-bd84-e0d61b0e55cf
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure PrevTotalUsers =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]< SELECTMONT, 'public v_fact_pbiuniqueuser'[activitymonth]>= LASTYEAR)
+			RETURN RESULT
+		formatString: 0
+		displayFolder: Users
+		lineageTag: da7765aa-97ad-4190-ba8a-26d927f0d356
+
+	measure PrevWorkspaceVolume = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbiworkspaces'[workspaceid]),'public v_dim_pbiworkspaces'[workspacecreationmonth]< SELECTMONT)
+			RETURN RESULT 
+			```
+		formatString: 0
+		displayFolder: Workspaces
+		lineageTag: c004cfe4-d415-4505-bc74-3f3a764a2bcb
+
+	measure RegionCount = DISTINCTCOUNT('public v_dim_pbicapacity'[Region])
+		formatString: 0
+		displayFolder: Capacity
+		lineageTag: 8bfe1f6a-9bde-4aed-b671-e28205fc593a
+
+	measure 'Active Users' = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			// VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]))
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			RETURN RESULT
+			
+			```
+		formatString: #,0
+		displayFolder: Users
+		lineageTag: 8599ae79-2c5a-421f-9025-a6df60ee78a9
+
+		changedProperty = FormatString
+
+	measure 'New Workspaces' = [Workspace Volume] - [PrevWorkspaceVolume]
+		formatString: 0
+		displayFolder: Workspaces
+		lineageTag: f2d4a086-a38c-4a13-96c2-8f312e5d467e
+
+	measure ReportCreateDate =
+			
+			VAR SELECTEDMONTH = [SelectedMonth]
+			VAR RESULT = CALCULATE(MAX('public v_dim_pbireport'[reportcreationmonth]), 'public v_dim_pbireport'[reportcreationmonth] = SELECTEDMONTH)
+			RETURN RESULT
+		displayFolder: Reports
+		lineageTag: f623b038-4356-4932-bb04-bfb11f1f4f48
+
+	measure WorkspaceCreateMonth = ```
+			
+			VAR SELECTEDMONTH = [SelectedMonth]
+			VAR RESULT = CALCULATE(MAX('public v_dim_pbiworkspaces'[workspacecreationmonth]), 'public v_dim_pbiworkspaces'[workspacecreationmonth] = SELECTEDMONTH)
+			RETURN RESULT 
+			```
+		displayFolder: Workspaces
+		lineageTag: 61e82203-d84b-41a4-88f1-107f6d2ac0d6
+
+	measure LastMonth =
+			
+			VAR SELECTEDMONTH = [SelectedMonth]
+			VAR LASTMONTH = CALCULATE(SELECTEDVALUE('Calendar'[PreMonth]),'Calendar'[YearMonthNo] = SELECTEDMONTH)
+			RETURN LASTMONTH
+		displayFolder: Times
+		lineageTag: ecba2afb-1249-4370-a68b-d9f19614f279
+
+	measure PreActiveUsers = ```
+			
+			VAR SELECTMONT = [LastMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			RETURN RESULT 
+			```
+		formatString: 0
+		displayFolder: Users
+		lineageTag: d0dd1f2a-8c11-48e2-a280-9fdfa3d7e89d
+
+	measure 'Active User MOM' = ```
+			[Active Users] - [PreActiveUsers] 
+			```
+		formatString: 0
+		displayFolder: Users
+		lineageTag: 86271b75-49ef-4873-84d5-e64da3ff6dd0
+
+	measure FirstMonth = CALCULATE(SELECTEDVALUE('Calendar'[YearMonthNo]), 'Calendar'[Index] = 1)
+		displayFolder: Times
+		lineageTag: 53faef3c-bf9b-4663-b1ba-5e99ba467372
+
+	measure Increase%Workspace = round([New Workspaces]/coalesce([PrevWorkspaceVolume],[New Workspaces]),2)
+		formatString: 0%;-0%;0%
+		displayFolder: Workspaces
+		lineageTag: 95fe8a44-b1ce-4db0-8791-2dd1611da7e5
+
+		changedProperty = FormatString
+
+	measure Increase%User =
+			
+			round([New Users]/coalesce([PrevTotalUsers],[New Users]),2)
+		formatString: 0%;-0%;0%
+		displayFolder: Users
+		lineageTag: 87678f01-2119-44a7-a7bd-a7362f0ee1b4
+
+		changedProperty = FormatString
+
+	measure PreViewed = ```
+			
+			VAR SELECTMONT = [LastMonth]
+			VAR RESULT = calculate(COUNT('public v_fact_pbiactivity'[activity]),'public v_fact_pbiactivity'[activitymonth] = SELECTMONT  && 'public v_fact_pbiactivity'[activity]= "ViewReport" )
+			RETURN RESULT
+			
+			```
+		formatString: 0
+		displayFolder: Views
+		lineageTag: f708f304-6d17-446e-b9ba-b9f013901208
+
+	measure NewViewed = ```
+			[Viewed Times] - [PreViewed] 
+			```
+		formatString: 0
+		displayFolder: Views
+		lineageTag: 983609f5-c927-41de-9375-53f91b0f08b4
+
+	measure Increase%Viewed = round([NewViewed]/COALESCE([PreViewed],[NewViewed]),2)
+		formatString: 0%;-0%;0%
+		displayFolder: Views
+		lineageTag: 766ba2ed-1352-416b-87d2-e0756ae1398e
+
+		changedProperty = FormatString
+
+	measure #UniqueUserROW =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "ROW", 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR )
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: ef408694-1664-4940-941b-ddf7c727c8c8
+
+		changedProperty = FormatString
+
+	measure #UniqueUserProd = ```
+			
+			//VAR SELECTMONT = [SelectedMonth] 
+			//VAR LASTYEAR = [LastYearMonth]
+			//VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "ROW", 'public v_dim_pbicapacity'[Environment] = "Production", 'public v_fact_pbiuniqueuser'[activitymonth]>= LASTYEAR )
+			//RETURN RESULT
+			VAR SELECTMONT = [SelectedMonth] 
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]< SELECTMONT, 'public v_dim_pbicapacity'[District] = "ROW", 'public v_dim_pbiworkspaces'[Environment] = "Production", 'public v_fact_pbiuniqueuser'[activitymonth]>= LASTYEAR )
+			RETURN RESULT
+			```
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: 10a934ac-cf5f-472c-ab14-24d95fd54645
+
+		changedProperty = FormatString
+
+	measure #UniqueUserPrv =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "ROW", 'public v_dim_pbiworkspaces'[Environment] = "PROVISIONAL", 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR )
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: e498bbae-c0da-4e9b-858d-9e352776f0d7
+
+		changedProperty = FormatString
+
+	measure #UniqueUserSNB =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "ROW", 'public v_dim_pbiworkspaces'[Environment] = "SANDBOX", 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR )
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: a416b944-0aaf-4c7c-8fe4-21678a9c133f
+
+		changedProperty = FormatString
+
+	measure #UniqueUserTest =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "ROW", 'public v_dim_pbiworkspaces'[Environment] = "TEST", 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR)
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: 1a238e2c-e1e6-491e-b6ee-6176a0a19920
+
+		changedProperty = FormatString
+
+	measure #UniqueUserAll = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]), 'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT 
+			, 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR 
+			, 'public v_dim_pbicapacity'[District] <> BLANK())
+			RETURN RESULT
+			```
+		formatString: 0
+		displayFolder: Narratives
+		lineageTag: b5794f0b-303d-44ed-b76b-8a76fad12616
+
+		changedProperty = FormatString
+
+	measure #UniqueUserPRC =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]), 'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "PRC", 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR )
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: 2571940f-6333-4680-84a0-d549ba73f543
+
+		changedProperty = FormatString
+
+	measure #UniqueUserPRC_PRD =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]), 'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "PRC",'public v_dim_pbiworkspaces'[Environment] = "PRODUCTION", 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR )
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: 45faef6b-0762-42b9-8175-d3137b10e97f
+
+		changedProperty = FormatString
+
+	measure #UniqueUserPRC_Prv =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "PRC",'public v_dim_pbiworkspaces'[Environment] = "PROVISIONAL", 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR )
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: f5d76bd4-7ea9-4cd8-9425-206d29abaea9
+
+		changedProperty = FormatString
+
+	measure #UniqueUserPRC_SNB =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_dim_pbicapacity'[District] = "PRC",'public v_dim_pbiworkspaces'[Environment] = "SANDBOX", 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR )
+			RETURN RESULT
+		formatString: #,0
+		displayFolder: Narratives
+		lineageTag: 07f13189-d8ec-4432-9b48-9042e2168dd4
+
+		changedProperty = FormatString
+
+	measure 'Daily Active User' = ```
+			VAR SELECTMONT = [SelectedMonth]
+			VAR USERCOUNT = calculate(COUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			VAR DAYCOUNT = calculate(DISTINCTCOUNT('Calendar'[Date]),'Calendar'[YearMonthNo]= SELECTMONT)
+			// VAR DAYCOUNT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[activitydate]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			// VAR RESULT = ROUND(USERCOUNT/30,0)
+			VAR RESULT = USERCOUNT/DAYCOUNT
+			RETURN RESULT
+			
+			```
+		formatString: #,0
+		displayFolder: Users
+		lineageTag: 88c7fe07-d62c-4eb9-8588-12c78f152eca
+
+		changedProperty = FormatString
+
+	measure Increase%report = round([Increased Reports]/coalesce([PrevReportVolume],[Increased Reports]),2)
+		formatString: 0%;-0%;0%
+		displayFolder: Reports
+		lineageTag: fb2e0141-23d1-4f08-977a-5029958f3d5b
+
+		changedProperty = FormatString
+
+	measure #CurrentDate = ```
+			MAX('public v_fact_pbiactivity'[activitydate]) 
+			```
+		displayFolder: Narratives
+		lineageTag: c4e28fa6-8552-4e06-95e2-705f7c1d616d
+
+	measure Role_Admin = ```
+			CALCULATE(DISTINCTCOUNT('public v_fact_workspaceaccess'[emailaddress]), 'public v_fact_workspaceaccess'[access role] = "Admin") 
+			```
+		formatString: 0
+		displayFolder: Access
+		lineageTag: a5452b5b-6f74-447e-b2b6-7acadc2beac2
+
+	measure Role_Member = ```
+			CALCULATE(DISTINCTCOUNT('public v_fact_workspaceaccess'[emailaddress]), 'public v_fact_workspaceaccess'[access role] = "Member") 
+			```
+		formatString: 0
+		displayFolder: Access
+		lineageTag: 736c792e-d32f-4f55-b777-1103d3d6ae4d
+
+	measure Role_Contri = ```
+			CALCULATE(DISTINCTCOUNT('public v_fact_workspaceaccess'[emailaddress]), 'public v_fact_workspaceaccess'[access role] = "Contributor") 
+			```
+		formatString: 0
+		displayFolder: Access
+		lineageTag: 24fa25e4-d1b6-4ba1-b0d7-d8795786016d
+
+	measure Role_Viewer = ```
+			CALCULATE(DISTINCTCOUNT('public v_fact_workspaceaccess'[emailaddress]), 'public v_fact_workspaceaccess'[access role] = "Viewer") 
+			```
+		formatString: 0
+		displayFolder: Access
+		lineageTag: 09b28043-a375-4bc0-8fa1-ca0a68f219ae
+
+	measure Role_All = DISTINCTCOUNT('public v_fact_workspaceaccess'[emailaddress])
+		formatString: 0
+		displayFolder: Access
+		lineageTag: 1c42bcca-9440-4d76-a0bb-bcff3bd9ffc2
+
+	measure Role_Admin% = DIVIDE([Role_Admin], [Role_All])
+		formatString: 0%;-0%;0%
+		displayFolder: Access
+		lineageTag: 0f101f54-1ffe-4a20-a7ac-ba302996c932
+
+		changedProperty = FormatString
+
+	measure Role_Mem% = DIVIDE([Role_Member], [Role_All])
+		formatString: 0%;-0%;0%
+		displayFolder: Access
+		lineageTag: f794a2b2-a8d9-43d5-8ae6-1ccce532ca11
+
+		changedProperty = FormatString
+
+	measure Role_Contri% = DIVIDE([Role_Contri], [Role_All])
+		formatString: 0%;-0%;0%
+		displayFolder: Access
+		lineageTag: abde1b45-076e-4b53-91b8-2dcca2593395
+
+		changedProperty = FormatString
+
+	measure Role_Viewer% = DIVIDE([Role_Viewer], [Role_All])
+		formatString: 0%;-0%;0%
+		displayFolder: Access
+		lineageTag: 4f344b14-3b34-4dab-8ae2-4449f8e92193
+
+		changedProperty = FormatString
+
+	measure 12_months_before = FORMAT ( TODAY() - 365, "YYYY-MM" )
+		displayFolder: Times
+		lineageTag: a55d0cc7-fcbe-4f3d-9685-086757deaea1
+
+	measure 6_months_before = FORMAT ( TODAY() - 182, "YYYY-MM" )
+		displayFolder: Times
+		lineageTag: cff4d5c1-3b17-45fd-9c10-5faf5585ccc0
+
+	measure 3_months_before = FORMAT ( TODAY() - 92, "YYYY-MM" )
+		displayFolder: Times
+		lineageTag: 483f2fb8-357b-474f-b15a-c6790f85331a
+
+	measure 'Potential Exited Employee' = CALCULATE(DISTINCTCOUNT('dim pro_license_holder'[userid]), 'dim pro_license_holder'[Title] = BLANK())
+		formatString: 0
+		displayFolder: Pro License
+		lineageTag: e850a507-bbdb-4202-a358-0b5c7020591a
+
+	measure ReportViewSpecial = ```
+			[Reports] - 0 
+			```
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: c8173106-4643-422a-b0ac-580fac87b89d
+
+	measure AvgVisitPerMonth = ```
+			calculate(COUNT('public v_fact_pbiactivity'[activity])/DISTINCTCOUNT('public v_fact_pbiactivity'[activitymonth]),'public v_fact_pbiactivity'[activity]= "ViewReport" )
+			
+			```
+		formatString: 0
+		displayFolder: Views
+		lineageTag: 74d11448-ef3c-4abf-b6c0-9b683405e087
+
+		changedProperty = FormatString
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure ActivityCount = CALCULATE(COUNT('public v_fact_pbiactivity'[activity]))
+		formatString: 0
+		displayFolder: BICP
+		lineageTag: bafbd832-b0b0-4363-b9cf-2104f9a6a61a
+
+	measure SourceReportVol = CALCULATE(DISTINCTcount('public v_dim_pbi_datasourcelineage'[reportid]))
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: 9d8b86ac-2eca-47db-ba0b-269ac6eb4a6f
+
+	measure ProPRC =
+			
+			var NUM = CALCULATE(count('dim pro_license_holder'[userid]),FILTER(ALL('dim pro_license_holder'),'dim pro_license_holder'[District] = "PRC"))
+			RETURN COALESCE(NUM+70, 70)
+		formatString: 0
+		displayFolder: Pro License
+		lineageTag: c44f3495-c800-4338-b429-d462d71c32dd
+
+	measure ProROW =
+			
+			VAR NUM = CALCULATE(count('dim pro_license_holder'[userid]),filter(ALL('dim pro_license_holder'),'dim pro_license_holder'[District] = "ROW"))
+			RETURN COALESCE(NUM, 0)
+		formatString: 0
+		displayFolder: Pro License
+		lineageTag: 1149fae4-860a-44ec-a578-ff0424732222
+
+	measure ProROWleft = IF( [ProROW] = 0, 0,(2250 - [ProROW]))
+		formatString: 0
+		displayFolder: Pro License
+		lineageTag: 606875c1-6e0b-4102-a6f5-361f8ec3e10a
+
+	measure ProPRCleft = IF([ProPRC] = 0, 0 , (1000 - [ProPRC]))
+		formatString: 0
+		displayFolder: Pro License
+		lineageTag: 05e45a3d-1819-458d-aaf0-0268f07e4b7f
+
+	measure Increase%ActiveUser = round([Active User MOM]/COALESCE( [PreActiveUsers],[Active User MOM]),2)
+		formatString: 0%;-0%;0%
+		displayFolder: Users
+		lineageTag: 921668e4-7f31-4759-af92-8bfce4caeaef
+
+		changedProperty = FormatString
+
+	measure #ISROW = IF(CALCULATE(DISTINCTCOUNTNOBLANK('public v_dim_pbicapacity'[District]))== 1 && SELECTEDVALUE('public v_dim_pbicapacity'[District]) == "ROW", 1,0 )
+		formatString: 0
+		displayFolder: Narratives
+		lineageTag: 3d14c8c1-34a5-4b32-b25f-547709cfe002
+
+	measure #ISPRC = IF(CALCULATE(DISTINCTCOUNTNOBLANK('public v_dim_pbicapacity'[District]))== 1 && SELECTEDVALUE('public v_dim_pbicapacity'[District]) == "PRC", 1,0 )
+		formatString: 0
+		displayFolder: Narratives
+		lineageTag: 86d2ea6a-55df-4159-b2a9-98b00be3ca52
+
+	measure #ISTotal = IF(CALCULATE(DISTINCTCOUNTNOBLANK('public v_dim_pbicapacity'[District]))== 2, 1,0 )
+		formatString: 0
+		displayFolder: Narratives
+		lineageTag: 4dd33b31-4432-4ef0-ab81-18ee94bfaab0
+
+	measure SelectedYear = ```
+			year('MeasureTable'[SelectedMonth]) 
+			```
+		formatString: 0
+		displayFolder: Times
+		lineageTag: a91006ec-0159-4565-89d2-ab4d54fcaf88
+
+	measure YOYUniqueUser% = IF([LastYearUniqueUser] = 0 , 1, round(([Unique Users] - [LastYearUniqueUser])/[LastYearUniqueUser], 2))
+		formatString: 0%;-0%;0%
+		displayFolder: Users
+		lineageTag: 8d7d3079-0f75-496e-829d-bff9bb48b41e
+
+		changedProperty = FormatString
+
+	measure LastYearUniqueUser =
+			
+			VAR SELECTMONT = [LastYearMonth]
+			VAR LAST2YEAR = MAX('Calendar'[Last2YearMonthNo])
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONT, 'public v_fact_pbiuniqueuser'[activitymonth]> LAST2YEAR  )
+			RETURN COALESCE(RESULT,0)
+		formatString: 0
+		displayFolder: Users
+		lineageTag: 50c4d89f-f4f6-42ba-96b9-fb9eccce6759
+
+	measure LastYearWorkspaceVolume =
+			
+			VAR SELECTMONT = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbiworkspaces'[workspaceid]),'public v_dim_pbiworkspaces'[workspacecreationmonth]<= SELECTMONT)
+			RETURN COALESCE(RESULT,0)
+		formatString: 0
+		displayFolder: Workspaces
+		lineageTag: af5c0cca-bd3a-47fe-9af6-179882096c72
+
+	measure LastYearReports =
+			
+			VAR SELECTMONT = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbireport'[reportid]),'public v_dim_pbireport'[reportcreationmonth]<= SELECTMONT&& OR ('public v_dim_pbireport'[reportdeletemonth]= blank() ,'public v_dim_pbireport'[reportdeletemonth]> SELECTMONT))
+			RETURN COALESCE(RESULT,0)
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: 785b96a4-120a-463e-a05a-24a4d51c08bb
+
+	measure LastYearActiveUser = ```
+			
+			VAR SELECTMONT = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			RETURN COALESCE(RESULT,0)
+			
+			```
+		formatString: 0
+		displayFolder: Users
+		lineageTag: d55b7607-537e-4df8-b964-ab42c6d32b1b
+
+	measure YOYMAU% = IF([LastYearActiveUser] = 0, 1, round(([Active Users] - [LastYearActiveUser])/[LastYearActiveUser], 2))
+		formatString: 0%;-0%;0%
+		displayFolder: Users
+		lineageTag: c8c4b26f-3eba-4b19-b30c-76a81c40d0f6
+
+		changedProperty = FormatString
+
+	measure YOYReport% = IF([LastYearReports]=0, 1, round(([Reports] - [LastYearReports])/[LastYearReports], 2))
+		formatString: 0%;-0%;0%
+		displayFolder: Reports
+		lineageTag: 01643e38-eeaf-41ad-b360-06cf34dd8d60
+
+		changedProperty = FormatString
+
+	measure YOYWorkspace% = IF ([LastYearWorkspaceVolume] = 0, 1, round(([Workspace Volume] - [LastYearWorkspaceVolume])/[LastYearWorkspaceVolume], 2))
+		formatString: 0%;-0%;0%
+		displayFolder: Workspaces
+		lineageTag: b0d3bfde-bf72-4fb1-ad5c-910005751a80
+
+		changedProperty = FormatString
+
+	measure YOYUniqueUser = [Unique Users] - [LastYearUniqueUser]
+		formatString: 0
+		displayFolder: Users
+		lineageTag: 10c24dea-d67d-43fe-bf78-b1f8026dd9fd
+
+	measure #Target = ```
+			0 
+			```
+		formatString: 0
+		displayFolder: Narratives
+		lineageTag: b45d63e7-1a86-4c9b-aec2-4f6492cd5569
+
+	measure YOYMAU = [Active Users] - [LastYearActiveUser]
+		formatString: 0
+		displayFolder: Users
+		lineageTag: 524f3ee1-c936-42af-bdad-dbfd551494ab
+
+	measure YOYReport = [Reports] - [LastYearReports]
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: 769b1657-daf4-4878-89f8-1225e840dd55
+
+	measure YOYWorkspace = [Workspace Volume] - [LastYearWorkspaceVolume]
+		formatString: 0
+		displayFolder: Workspaces
+		lineageTag: d043b7d6-f6bd-411c-b39c-06474d7f1f36
+
+	measure 'Turn on Arrow Color' = SWITCH(TRUE(),[Increase%Workspace]> 0, "#2ECC40", "#FF4136")
+		lineageTag: 4dd8bef1-3213-4d00-85d9-2d579d5f99f3
+
+	measure 'New Reports' = [Reports] - [PrevReportVolume]
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: b09e3535-3ae1-4cb5-8506-74ae2f0a9ab0
+
+	measure 'Viewed Times Total' =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(COUNT('public v_fact_pbiactivity'[activity]),'public v_fact_pbiactivity'[activitymonth] <= SELECTMONT  && 'public v_fact_pbiactivity'[activity]= "ViewReport" )
+			RETURN RESULT
+		formatString: 0
+		displayFolder: Views
+		lineageTag: 8209aacd-b9c1-41a1-a922-590532f3c908
+
+	measure ReportNA =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbireport'[reportid]),'public v_dim_pbireport'[reportcreationmonth]<= SELECTMONT&& OR ('public v_dim_pbireport'[reportdeletemonth]= blank() ,'public v_dim_pbireport'[reportdeletemonth]> SELECTMONT))
+			RETURN IF(ISBLANK(RESULT),0,RESULT)
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: 632d00ae-1a3c-4708-ae76-c08122e36fdf
+
+	measure Reports_outdatedsnd = CALCULATE(DISTINCTCOUNT('public v_dim_pbireport'[reportid]),CONTAINSSTRING('public v_dim_pbireport'[existing_duration],">"))
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: 9aa7ba10-9b05-49fe-91f8-087eac4a40b5
+
+	measure workspace_outdatedsnd = CALCULATE(DISTINCTCOUNT('public v_dim_pbireport'[workspaceid]),CONTAINSSTRING('public v_dim_pbireport'[existing_duration],">"))
+		formatString: 0
+		displayFolder: Workspaces
+		lineageTag: 968682ea-5f69-4e61-8521-05739fb7f46a
+
+	measure 'Newly created Reports' =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbireport'[reportid]),'public v_dim_pbireport'[reportcreationmonth] = SELECTMONT&& OR ('public v_dim_pbireport'[reportdeletemonth]= blank() ,'public v_dim_pbireport'[reportdeletemonth]> SELECTMONT))
+			RETURN RESULT
+		formatString: 0
+		displayFolder: Reports
+		lineageTag: f9c145ca-2c1e-4ab1-a22f-8b1cc31e3402
+
+	measure PreMonth = max('Calendar'[PreMonth])
+		displayFolder: Times
+		lineageTag: 36d255f2-5df9-455e-9181-e8b6c5309cc3
+
+	measure 'Pre Daily Active User' =
+			VAR SELECTMONT = [PreMonth]
+			VAR USERCOUNT = calculate(COUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			VAR DAYCOUNT = calculate(DISTINCTCOUNT('Calendar'[Date]),'Calendar'[YearMonthNo]= SELECTMONT)
+			// VAR DAYCOUNT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[activitydate]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			// VAR RESULT = ROUND(USERCOUNT/30,0)
+			VAR RESULT = USERCOUNT/DAYCOUNT
+			RETURN RESULT
+		formatString: 0
+		displayFolder: Users
+		lineageTag: f66a383e-80ea-473b-adc0-cfd4ffedc920
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure Increase%DAU = round([Daily Active User MOM]/COALESCE( [Pre Daily Active User],[Daily Active User MOM]),2)
+		formatString: 0%;-0%;0%
+		displayFolder: Users
+		lineageTag: f2e784a0-a612-4968-a99e-12d7a3bf8be7
+
+		changedProperty = FormatString
+
+	measure 'Daily Active User MOM' = ```
+			[Daily Active User] - [Pre Daily Active User] 
+			```
+		formatString: 0
+		displayFolder: Users
+		lineageTag: b2a87f3b-45f9-4416-afde-e18abd8e13cc
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure SourceDatasetVol = CALCULATE(DISTINCTCOUNT('public v_dim_pbi_datasourcelineage'[datasetid]))
+		formatString: 0
+		displayFolder: Source
+		lineageTag: 998f6c26-dc8d-428b-b65a-3e5aa68fee19
+
+	measure SourceDataset% = [SourceDatasetVol]/CALCULATE(count('public v_dim_pbi_datasourcelineage'[datasetid]),ALLSELECTED('public v_dim_pbi_datasourcelineage'))
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Source
+		lineageTag: c572710e-307d-404d-92eb-a23da98aaabf
+
+		changedProperty = FormatString
+
+	measure LastYearMonth = max('Calendar'[LastYearMonthNo])
+		displayFolder: Times
+		lineageTag: a9ee51db-695a-49f9-b410-9d8ec3c480ad
+
+	measure LastYearPreMonth = max('Calendar'[LastYearPreMonth])
+		displayFolder: Times
+		lineageTag: f79dc212-c457-4afe-92e0-5d97deec27ed
+
+	measure LastYearDAU =
+			VAR SELECTMONT = [LastYearMonth]
+			VAR USERCOUNT = calculate(COUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			VAR DAYCOUNT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[activitydate]),'public v_fact_pbiuniqueuser'[activitymonth]= SELECTMONT)
+			// VAR RESULT = ROUND(USERCOUNT/30,0)
+			VAR RESULT = USERCOUNT/DAYCOUNT
+			RETURN RESULT
+		formatString: 0
+		displayFolder: Users
+		lineageTag: 9ee65ff3-715a-478b-84d5-cfdaaeb56445
+
+	measure YOYDAU = [Daily Active User] - COALESCE([LastYearDAU],0)
+		formatString: 0
+		displayFolder: Users
+		lineageTag: 93e3f673-32b2-4cd5-8ca0-e1eee4c9591f
+
+	measure YOYDAU% = IF([LastYearDAU] = 0, 1, round([YOYDAU]/[LastYearDAU], 2))
+		formatString: 0%;-0%;0%
+		displayFolder: Users
+		lineageTag: 6c5a4329-0165-40a6-8f48-393db4b9b7ca
+
+	measure RepublishCount = ```
+			
+			 CALCULATE(count('public v_fact_pbirepublish'[republishdate]), filter( 'public v_dim_pbiworkspaces', 'public v_dim_pbiworkspaces'[workspacecreationmonth]  > "2022-10"))
+			```
+		formatString: 0
+		lineageTag: 6f630e45-1df3-47d9-bcd8-32ddfc92b37e
+
+	measure SP_Activity_cn = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(SUM('public v_aggr_serviceprincipal_log'[vol]),'public v_aggr_serviceprincipal_log'[activitymonth] = SELECTMONT)
+			RETURN RESULT
+			
+			```
+		formatString: 0
+		lineageTag: 694eb9a6-565d-42cb-af1c-4235b019794c
+
+	measure GatewayUser = DISTINCTCOUNT('public v_dim_gatewayuser'[emailaddress])
+		formatString: 0
+		displayFolder: Gateway
+		lineageTag: cea6cc96-ab0d-4f49-b637-211a073dba19
+
+	measure 'Unique Users(Report)' = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiactivity'[itcode]),'public v_fact_pbiactivity'[activitymonth]<= SELECTMONT, 'public v_fact_pbiactivity'[activitymonth]> LASTYEAR, 'public v_fact_pbiactivity'[activity] = "ViewReport" )
+			RETURN RESULT
+			
+			```
+		formatString: 0
+		displayFolder: Users
+		lineageTag: 985bdb72-439c-4822-81b0-a5a22aaf2888
+
+	measure user_last_visit =
+			
+			CALCULATE(max('public v_fact_pbiuniqueuser'[activitydate]))
+		lineageTag: 8a3b1a66-6c96-452b-b464-bd6698a0d87a
+
+	measure 'Inactive Report' =
+			
+			VAR SELECTMONT = [SelectedMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbireport'[reportid]),'public v_dim_pbireport'[reportcreationmonth]<= SELECTMONT&& OR ('public v_dim_pbireport'[reportdeletemonth]= blank() ,'public v_dim_pbireport'[reportdeletemonth]> SELECTMONT) && or('public v_dim_pbireport'[inactive_duration] = "> 6 months", 'public v_dim_pbireport'[inactive_duration] = "> 12 months/never accessed"))
+			RETURN RESULT
+		formatString: 0
+		lineageTag: f3bb6c4d-853b-440f-ac6f-4bab3d8b583a
+
+	measure #cleaned_reports = COALESCE(sum('pbimonitorlog'[cleanup_reports]),"N/A")
+		formatString: 0
+		lineageTag: d4908e8f-d574-4f1d-aec8-78e883115ac5
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Copilot User_NewAdd' = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			// VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]))
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbi_copilot_list'[itcode]),'public v_dim_pbi_copilot_list'[add_month]= SELECTMONT)
+			RETURN RESULT
+			
+			```
+		formatString: 0
+		lineageTag: 7be6f8aa-bed0-43bb-b46c-d94c2f66cd1c
+
+	measure 'Copilot User%' = divide([Copilot User],[Active Users_3m])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 7f8494e8-6344-48a1-80ea-a6e1ea4ec853
+
+	measure 'Active Users_3m' = ```
+			
+			VAR SELECTMONT = [3_months_before]
+			// VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]))
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]>= SELECTMONT)
+			RETURN RESULT
+			
+			```
+		formatString: 0
+		lineageTag: 05336864-5da3-4193-baa9-1fe15694319a
+
+	measure 'Copilot User' = ```
+			
+			VAR SELECTMONT = [SelectedMonth]
+			// VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]))
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_dim_pbi_copilot_list'[itcode]),'public v_dim_pbi_copilot_list'[add_month]<= SELECTMONT)
+			RETURN RESULT
+			
+			```
+		formatString: 0
+		lineageTag: cc508196-9472-46fa-9ca3-8d20679491c0
+
+	measure 'Copilot Top Function' = ```
+			
+			  VAR _FunctionUsers = SUMMARIZE(
+			    'public v_dim_pbi_copilot_list',
+			    'public v_dim_pbi_copilot_list'[Function],
+			    "User Count", COUNT('public v_dim_pbi_copilot_list'[itcode])
+			  )
+			  // Get the function with the most users
+			  VAR _TopFunction = TOPN(
+			    1,
+			    _FunctionUsers,
+			    [User Count],
+			    DESC
+			  )
+			  RETURN MAXX(_TopFunction, [Function])
+			```
+		lineageTag: fde2faf3-ea57-4acb-bcbc-de1f6d6d6ed4
+
+	measure 'Active Reports' = CALCULATE(COUNTROWS('public v_dim_pbireport'),FILTER('public v_dim_pbireport','public v_dim_pbireport'[reportdeletedate] = BLANK()))
+		formatString: 0
+		lineageTag: b98a27cb-f9bf-42a4-b38e-217eab517d09
+
+	measure 'Active Report Owner' = CALCULATE(DISTINCTCOUNT('public v_dim_pbireport'[ReportName_]),FILTER('public v_dim_pbireport','public v_dim_pbireport'[reportdeletedate] = BLANK()))
+		formatString: 0
+		lineageTag: 25bf7b00-fdcf-4d34-8584-bb57b54f7338
+
+	column 列
+		isHidden
+		formatString: 0
+		lineageTag: 5439e9c9-4df7-4e38-a468-1f598e501d38
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [列]
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition MeasureTable-21abfb38-c2e8-417d-8b7c-479c11fcf0d5 = calculated
+		mode: import
+		source = Row("列", BLANK())
+
+	annotation PBI_Id = 2bc457322bd1456fbacd39fe54f21f07
+
+	annotation 436ba87b-9c83-4389-a31b-ebd06a36be98 = {"Expression":""}
+

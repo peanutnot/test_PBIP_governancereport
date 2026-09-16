@@ -1,0 +1,49 @@
+table User_Active
+	lineageTag: e455680b-3e73-4463-b2fd-1bc93f9620ed
+
+	column last_visit
+		lineageTag: 8c38352d-db01-4487-9d65-a2a0726e45a4
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Last_Visit]
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_visit_month = left([Last_Visit],7)
+		lineageTag: f3b3692b-595b-4f39-a427-9582b38fbc57
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column status = ```
+			
+			switch(True,
+			[last_visit]<[12_months_before], "> 12 months/Never", 
+			[last_visit]<[6_months_before], "7-12 months", 
+			[last_visit]<[3_months_before], "3-6 months", 
+			"<3 months")
+			```
+		lineageTag: f6df2199-a574-45f7-a8a3-0eda935208d3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column itcode
+		lineageTag: da6311b7-5020-4569-a788-0a4d2fef5563
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: public v_fact_pbiuniqueuser[itcode]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition User_Active-4653ddf9-5186-4caf-9f21-fa8eaa50fabd = calculated
+		mode: import
+		source =
+				
+				VAR SELECTMONTH = [SelectedMonth]
+				VAR LASTYEAR = [LastYearMonth]
+				return CALCULATETABLE(
+				SUMMARIZE('public v_fact_pbiuniqueuser', 'public v_fact_pbiuniqueuser'[itcode], "last_visit" ,max('public v_fact_pbiuniqueuser'[activitydate])), 'public v_fact_pbiuniqueuser'[activitymonth]<= SELECTMONTH, 'public v_fact_pbiuniqueuser'[activitymonth]> LASTYEAR, 'public v_dim_pbicapacity'[Capacity] <> BLANK())
+
+	annotation PBI_Id = ed2346391e574c6f8c5e4e855f95f7b8
+

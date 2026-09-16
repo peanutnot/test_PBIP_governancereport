@@ -1,0 +1,36 @@
+table 'public v_check_workspace_owner_new'
+	lineageTag: 49717f13-e564-4c14-a8d6-fd988893d1a7
+
+	column workspaceid
+		dataType: string
+		lineageTag: 7648eb7c-928b-49be-840f-8e0bea90478b
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column userid
+		dataType: string
+		lineageTag: efbceed5-b9c6-403e-94ed-b40f1505ed1f
+		summarizeBy: none
+		sourceColumn: userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column groupuseraccessright
+		dataType: string
+		lineageTag: 0ded85c9-0f29-43d1-9032-4ff9430233fa
+		summarizeBy: none
+		sourceColumn: groupuseraccessright
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_check_workspace_owner_new' = m
+		mode: import
+		source =
+				let
+				    源 = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_check_workspace_owner_new = 源{[Schema="public",Item="v_check_workspace_owner_new"]}[Data]
+				in
+				    public_v_check_workspace_owner_new
+

@@ -1,0 +1,184 @@
+table Calendar
+	lineageTag: 0ab4c756-bc63-445c-aa5b-032db0432fa2
+
+	measure #sigma = "+"
+		lineageTag: a600efa4-01c4-4b86-a3f4-3801a9b386e0
+
+	measure PreTotalUsers =
+			
+			VAR SELECTMONT =[SelectedMonth]
+			VAR LASTYEAR = [LastYearMonth]
+			VAR RESULT = calculate(DISTINCTCOUNT('public v_fact_pbiuniqueuser'[itcode]),'public v_fact_pbiuniqueuser'[activitymonth]< SELECTMONT && 'public v_fact_pbiuniqueuser'[activitymonth]>= LASTYEAR)
+			RETURN RESULT
+		formatString: 0
+		lineageTag: b44a64bb-57be-4756-bbc1-3253e5fe9124
+
+	column Year
+		formatString: 0
+		lineageTag: eb461abe-7b6c-4027-8210-cc7dc56396a7
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNo
+		lineageTag: 0930290e-9cfe-44a9-99cc-5bf7627ad298
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthNo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearMonthNo
+		lineageTag: a771f41d-c8c1-4ec0-b46e-05126292bfff
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [YearMonthNo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthShort
+		lineageTag: d4b45deb-f1ea-4226-8732-4d8a0ad8ad0c
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthShort]
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthLong
+		lineageTag: 7689f1d6-961e-431d-ae92-012c41b1f0f0
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthLong]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		lineageTag: 5f5ea652-7997-4d1a-a8d0-d5e91ede039d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Quarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearQuarter
+		lineageTag: 2120ee2d-88d3-429e-9a69-66120a1eef23
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [YearQuarter]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f5ff6eca-c974-4715-935e-736b0251c273
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Index = RANKX(VALUES('Calendar'[YearMonthNo]),[YearMonthNo],,1)
+		formatString: 0
+		lineageTag: 8583000e-3f98-464e-bc4f-9918a488fcbd
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column PreMonth = ```
+			
+			SWITCH(TRUE(),
+			'Calendar'[YearMonthNo] = [FirstMonth], 'Calendar'[YearMonthNo]
+			,CALCULATE(MAX('Calendar'[YearMonthNo]), 
+			                FILTER('Calendar', 
+			                    'Calendar'[Index] < EARLIER ('Calendar'[Index])
+			                )
+			            ))
+			```
+		lineageTag: 4ba0a31b-4fdb-4d6a-a2db-7a88bc6d317f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthYear
+		lineageTag: 61ebdbfb-8253-4250-821d-0f6545c3b68a
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [MonthYear]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastYearMonthNo
+		lineageTag: 1b27fd2e-9494-4e78-8e3f-373164d12b50
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [LastYearMonthNo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column LastYearPreMonth = FORMAT(DATEADD('Calendar'[Date],-13,MONTH),"YYYY-MM" )
+		lineageTag: 08c3838b-44e2-464c-8c6a-75ea4a9ea62e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Last2YearMonthNo
+		lineageTag: 2b6c9126-9ce5-48d8-8c9f-dd3c32de9c74
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Last2YearMonthNo]
+
+		annotation SummarizationSetBy = Automatic
+
+	column FirstDateAMonth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f3b5ca23-d953-41da-89cd-a7b8ce2d427d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [FirstDateAMonth]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Calendar-e29b5337-c74a-4244-b350-b3a3bbee18ff = calculated
+		mode: import
+		source = ```
+				DISTINCT(SELECTCOLUMNS(
+					ADDCOLUMNS ( 
+						CALENDAR (TODAY() - 700,TODAY()), 
+						"Year", YEAR ( [Date] ), 
+						"MonthNo", FORMAT ( [Date], "MM" ), 
+						"YearMonthNo", FORMAT ( [Date], "YYYY-MM" ), 
+						"MonthYear", FORMAT ( [Date], "mmm.YYYY" ), 
+						"MonthShort", FORMAT ( [Date], "mmm" ), 
+						"MonthLong", FORMAT ( [Date], "mmmm" ), 
+						"Quarter", "Q" & FORMAT ( [Date], "Q" ), 
+						"YearQuarter", FORMAT ( [Date], "YYYY" ) & "/Q" & FORMAT ( [Date], "Q" ),
+				        "LastYearMonthNo", YEAR ( [Date] ) -1 & "-" &FORMAT ( [Date], "MM" ),
+						"Last2YearMonthNo", YEAR ( [Date] ) -2 & "-" &FORMAT ( [Date], "MM" )
+						) ,
+				    "Date", [Date],
+				    "FirstDateAMonth", TRUNC([YearMonthNo] & "-01"),
+					"Year", [Year],
+					"MonthNo", [MonthNo],
+					"YearMonthNo", [YearMonthNo],
+				    "MonthYear",[MonthYear],
+					"MonthShort", [MonthShort],
+					"MonthLong", [MonthLong],
+					"Quarter", [Quarter],
+					"YearQuarter", [YearQuarter],
+				    "LastYearMonthNo", [LastYearMonthNo],
+					"Last2YearMonthNo", [Last2YearMonthNo]
+				))
+				```
+
+	annotation PBI_Id = 314e9d2ed2a74509b1c128582b815c80
+

@@ -1,0 +1,129 @@
+table 'public v_dim_reportaccess'
+	lineageTag: e6c0df23-fc61-4fff-b212-2af64645890e
+
+	column reportid
+		dataType: string
+		lineageTag: ceb3898f-8e60-45a0-a57d-0e64d8fe4738
+		summarizeBy: none
+		sourceColumn: reportid
+
+		annotation SummarizationSetBy = Automatic
+
+	column reportuseraccessright
+		dataType: string
+		lineageTag: 0078cc49-4960-4911-b0b0-fcaf487921d0
+		summarizeBy: none
+		sourceColumn: reportuseraccessright
+
+		annotation SummarizationSetBy = Automatic
+
+	column district
+		dataType: string
+		lineageTag: 6c5b87e1-e4d8-4be1-8cc7-5efa26d682aa
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column emailaddress
+		dataType: string
+		lineageTag: 26dcff6b-7262-4c6e-ba8d-e81468a935a8
+		summarizeBy: none
+		sourceColumn: emailaddress
+
+		annotation SummarizationSetBy = Automatic
+
+	column displayname
+		dataType: string
+		lineageTag: 97d0c088-bb14-4f18-b439-f544dedb6b92
+		summarizeBy: none
+		sourceColumn: displayname
+
+		annotation SummarizationSetBy = Automatic
+
+	column identifier
+		dataType: string
+		lineageTag: f81a139f-9550-4c26-aaa6-d5e21680c9b4
+		summarizeBy: none
+		sourceColumn: identifier
+
+		annotation SummarizationSetBy = Automatic
+
+	column principaltype
+		dataType: string
+		lineageTag: af623b7b-f8ef-4557-badc-3fe160387c94
+		summarizeBy: none
+		sourceColumn: principaltype
+
+		annotation SummarizationSetBy = Automatic
+
+	column usertype
+		dataType: string
+		lineageTag: a4685e0c-61fe-403c-aa84-d738d37486d2
+		summarizeBy: none
+		sourceColumn: usertype
+
+		annotation SummarizationSetBy = Automatic
+
+	column updatetime
+		dataType: string
+		lineageTag: bb2584e2-5928-448e-92d9-ee0ef707ed41
+		summarizeBy: none
+		sourceColumn: updatetime
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_visit =
+			
+			VAR reportid = [reportid]
+			VAR emailaddress = lower([emailaddress])
+			VAR RESULT = CALCULATE(MAX('public v_fact_pbiactivity'[activitydate]), 'public v_fact_pbiactivity'[reportid] = reportid , lower('public v_fact_pbiactivity'[userid]) =emailaddress )
+			RETURN RESULT
+		lineageTag: 5acf8d0e-b69a-48cd-b6da-9ed226eea08a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column inactive_duration = ```
+			
+			VAR reportid = [reportid]
+			VAR last_visit = [last_visit]
+			VAR reportcreation = CALCULATE(SELECTEDVALUE('public v_dim_pbireport'[reportcreationmonth]),  'public v_dim_pbireport'[reportid] = reportid)
+			VAR RESULT = SWITCH(TRUE(),
+			reportcreation>=[3_months_before], "Active",
+			coalesce(last_visit,reportcreation) <[12_months_before],  "> 12 months/never accessed", 
+			coalesce(last_visit,reportcreation)<[6_months_before], "> 6 months", 
+			coalesce(last_visit,reportcreation)<[3_months_before], "> 3 months", 
+			"Active")
+			return RESULT
+			```
+		lineageTag: 7ea60e44-9cd2-42ab-a338-5f698bbd53bf
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid
+		dataType: string
+		lineageTag: 23bab212-b97f-4fca-bfc7-41248d62f2f4
+		summarizeBy: none
+		sourceColumn: workspaceid
+
+		annotation SummarizationSetBy = Automatic
+
+	column graphid
+		dataType: string
+		lineageTag: 11f554f8-b0bd-4c17-a8fd-f36adefed334
+		summarizeBy: none
+		sourceColumn: graphid
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_dim_reportaccess-495e3840-c8e4-44e0-b7ba-a4a0f98817c2' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_reportaccess = Source{[Schema="public",Item="reportaccess"]}[Data]
+				in
+				    public_reportaccess
+

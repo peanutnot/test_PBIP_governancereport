@@ -1,0 +1,125 @@
+table v_dim_service_principal
+	lineageTag: b9d2552c-2ed6-4e97-b6f5-c8406379b02f
+
+	column Environment
+		dataType: string
+		lineageTag: 27d01928-c845-4ba0-8a75-6c9f9a310a3e
+		summarizeBy: none
+		sourceColumn: Environment
+
+		annotation SummarizationSetBy = Automatic
+
+	column Application_id
+		dataType: string
+		lineageTag: 1c36320a-d057-4938-8c9c-d3f82768f052
+		summarizeBy: none
+		sourceColumn: Application_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Service Principal Name'
+		dataType: string
+		lineageTag: e164b54c-3396-4c7c-b848-ed0160b6a6d0
+		summarizeBy: none
+		sourceColumn: Service Principal Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Team
+		dataType: string
+		lineageTag: 314b501d-00b9-4a83-bb41-de7384421375
+		summarizeBy: none
+		sourceColumn: Team
+
+		annotation SummarizationSetBy = Automatic
+
+	column Purpose
+		dataType: string
+		lineageTag: c70ffc1b-4927-4d4b-8316-0dbef792dfe7
+		summarizeBy: none
+		sourceColumn: Purpose
+
+		annotation SummarizationSetBy = Automatic
+
+	column Applicant
+		dataType: string
+		lineageTag: d0a9aaea-cacc-4a41-b923-d93334e668c4
+		summarizeBy: none
+		sourceColumn: Applicant
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Allow Admin API'
+		dataType: string
+		lineageTag: 0e276ab3-3e59-4861-b802-f3dc0ddf3c09
+		summarizeBy: none
+		sourceColumn: Allow Admin API
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Allow Embed API'
+		dataType: string
+		lineageTag: 481e8352-0048-4150-80ff-a56d261d07d4
+		summarizeBy: none
+		sourceColumn: Allow Embed API
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Security Group'
+		dataType: string
+		lineageTag: 9de72183-f558-474e-9bd4-402d7a1ab754
+		summarizeBy: none
+		sourceColumn: Security Group
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: 528871ac-6382-477b-a3b8-302163dc1564
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Allow API'
+		dataType: string
+		lineageTag: 9728c126-b6da-42bc-9f42-2294b82558e0
+		summarizeBy: none
+		sourceColumn: Allow API
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Add Date'
+		dataType: string
+		lineageTag: 0eb85c4f-2824-4988-8add-2ecd88057f92
+		summarizeBy: none
+		sourceColumn: Add Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column11
+		dataType: string
+		lineageTag: 82737f42-9203-4145-84ba-a344fd6097b8
+		summarizeBy: none
+		sourceColumn: Column11
+
+		annotation SummarizationSetBy = Automatic
+
+	partition v_dim_service_principal-dd310f5d-204d-4423-80f0-032616f11743 = m
+		mode: import
+		source =
+				let
+				    Source = SharePoint.Files("https://lenovo.sharepoint.com/sites/BIPlatform", [ApiVersion = 15]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each ([Folder Path] = "https://lenovo.sharepoint.com/sites/BIPlatform/Shared Documents/Power BI/Security & Compliance_安全和合规/Service Principal - 服务主体账号/")),
+				    #"Service Principal List xlsx_https://lenovo sharepoint com/sites/BIPlatform/Shared Documents/Power BI/Security & Compliance_安全和合规/Service Principal - 服务主体账号/" = #"Filtered Rows"{[Name="Service Principal List.xlsx",#"Folder Path"="https://lenovo.sharepoint.com/sites/BIPlatform/Shared Documents/Power BI/Security & Compliance_安全和合规/Service Principal - 服务主体账号/"]}[Content],
+				    #"Imported Excel Workbook" = Excel.Workbook(#"Service Principal List xlsx_https://lenovo sharepoint com/sites/BIPlatform/Shared Documents/Power BI/Security & Compliance_安全和合规/Service Principal - 服务主体账号/"),
+				    现有List_Sheet = #"Imported Excel Workbook"{[Item="现有List",Kind="Sheet"]}[Data],
+				    #"Removed Columns" = Table.RemoveColumns(现有List_Sheet,{"Column11", "Column12", "Column10"}),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Removed Columns", [PromoteAllScalars=true])
+				in
+				   #"Promoted Headers"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

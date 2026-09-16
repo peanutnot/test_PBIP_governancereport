@@ -1,0 +1,121 @@
+table 'public dim_user_structure'
+	lineageTag: 1d1de3df-c99b-4654-8913-ba76a04bdaf3
+
+	column geo
+		dataType: string
+		lineageTag: 1140acfb-7275-45a6-aa25-a5f3ea4b3e91
+		summarizeBy: none
+		sourceColumn: geo
+
+		annotation SummarizationSetBy = Automatic
+
+	column title
+		dataType: string
+		lineageTag: 69c84ce9-aa05-4939-ba8b-68a97f2df518
+		summarizeBy: none
+		sourceColumn: title
+
+		annotation SummarizationSetBy = Automatic
+
+	column Department
+		dataType: string
+		lineageTag: 43b03255-a85c-43f2-863c-ff39a546de79
+		summarizeBy: none
+		sourceColumn: Department
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_visit =
+			
+			var userid = [userid]
+			var last_visit = CALCULATE(max('public v_fact_pbiuniqueuser'[activitydate]),'public v_fact_pbiuniqueuser'[itcode] = userid, 'public v_dim_pbicapacity'[capacity] <> BLANK())
+			return last_visit
+		lineageTag: 20d7f639-f52e-4596-bf34-28e15e8f90ac
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column status = ```
+			
+			switch(True,
+			[last_visit]<[12_months_before], "> 12 months/Never", 
+			[last_visit]<[6_months_before], "> 6 months", 
+			[last_visit]<[3_months_before], "> 3 months", 
+			"Active")
+			```
+		lineageTag: dbbbb883-d3b0-4e1b-916b-b2aeb702758b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_visit_month = left([last_visit],7)
+		lineageTag: 0b75593c-5c98-43d6-aff1-f6db721e4e14
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column userid
+		dataType: string
+		lineageTag: b5c40a47-21a8-4faf-b5a1-97936413ea55
+		summarizeBy: none
+		sourceColumn: userid
+
+		annotation SummarizationSetBy = Automatic
+
+	column name
+		dataType: string
+		lineageTag: b63dc6a0-6c05-4fac-be73-afcd8c31c265
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column mail
+		dataType: string
+		lineageTag: b839e8c8-a563-4ae3-9cef-48ce4c1adcd1
+		summarizeBy: none
+		sourceColumn: mail
+
+		annotation SummarizationSetBy = Automatic
+
+	column Group
+		dataType: string
+		lineageTag: 1550766f-7f13-44eb-8581-934a9b1d7915
+		summarizeBy: none
+		sourceColumn: Group
+
+		annotation SummarizationSetBy = Automatic
+
+	column exited
+		dataType: string
+		lineageTag: bff410e1-19e5-4499-9452-05d3eeb9fe87
+		summarizeBy: none
+		sourceColumn: exited
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_record
+		dataType: int64
+		formatString: 0
+		lineageTag: a32a7efb-7b3a-4422-b620-59d3f3e0c770
+		summarizeBy: sum
+		sourceColumn: last_record
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public dim_user_structure-627d3876-b309-4c25-8080-661a22ed1dd3' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_user_structure = Source{[Schema="public",Item="v_dim_user_structure"]}[Data],
+				    #"Renamed Columns" = Table.RenameColumns(public_user_structure,{{"itcode", "userid"}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Renamed Columns", each ([userid] <> "")),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Filtered Rows",{{"Business Group", "Group"}, {"department", "Department"}})
+				in
+				    #"Renamed Columns1"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

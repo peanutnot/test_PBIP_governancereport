@@ -1,0 +1,128 @@
+relationship a5d5f422-fd11-4968-bb4a-35bfe0614b03
+	fromColumn: 'public v_dim_pbireport'.workspaceid
+	toColumn: 'public v_dim_pbiworkspaces'.workspaceid
+
+relationship df6689dd-2ace-40d6-b35b-32a1cfc23a1b
+	fromColumn: 'public v_fact_workspaceaccess'.workspaceid
+	toColumn: 'public v_dim_pbiworkspaces'.workspaceid
+
+relationship a5d724f1-0f2a-4078-bfea-d8463c0d8cee
+	fromColumn: 'public v_dim_pbiworkspaces'.capacityid
+	toColumn: 'public v_dim_pbicapacity'.capacityid
+
+relationship 06ccbbc7-50b0-40fe-a9db-3c22fee32e02
+	fromColumn: 'public v_fact_pbiactivity'.reportid
+	toColumn: 'public v_dim_pbireport'.reportid
+
+relationship 1da0faac-a852-4551-84b9-e0da4d185786
+	isActive: false
+	fromColumn: 'public v_fact_pbiactivity'.workspaceid
+	toColumn: 'public v_dim_pbiworkspaces'.workspaceid
+
+relationship 1e91db9f-29cb-4c2c-bbf6-4e029b6db4c4
+	fromColumn: 'public v_fact_pbirepublish'.reportid
+	toColumn: 'public v_dim_pbireport'.reportid
+
+relationship 132fa7cb-3f14-4ad1-8352-a8d86c65a8f3
+	fromColumn: 'public v_fact_pbiuniqueuser'.workspaceid
+	toColumn: 'public v_dim_pbiworkspaces'.workspaceid
+
+relationship 5ed93009-a7f5-459b-b035-31c48f97f683
+	fromColumn: 'public v_dim_reportaccess'.reportid
+	toColumn: 'public v_dim_pbireport'.reportid
+
+relationship b143ff08-6f02-459f-a194-7584862666cf
+	fromColumn: 'public v_dim_pbidataset'.workspaceid
+	toColumn: 'public v_dim_pbiworkspaces'.workspaceid
+
+relationship ae3e3d9a-6526-40c4-a84a-4e63ac9a5521
+	isActive: false
+	fromColumn: 'public v_dim_pbi_datasourcelineage'.reportid
+	toColumn: 'public v_dim_pbireport'.reportid
+
+relationship 41b8775d-1b1c-4b0f-86bc-17ec7377f41e
+	fromColumn: 'public v_aggr_serviceprincipal_log'.userid
+	toColumn: v_dim_service_principal.Application_id
+
+relationship 301af327-1bb1-45b3-a1e8-dc9cdebe667e
+	crossFilteringBehavior: bothDirections
+	securityFilteringBehavior: bothDirections
+	fromColumn: 'public v_fact_serviceprincipal_log'.userid
+	toColumn: v_dim_service_principal.Application_id
+
+relationship efc3fbf2-95dc-44c5-a70f-11ce4c6e0cc7
+	fromColumn: 'public v_fact_serviceprincipal_log'.reportid
+	toColumn: 'public v_dim_pbireport'.reportid
+
+relationship 9642f094-483b-4271-9460-44d6e920b40d
+	fromColumn: 'public v_aggr_serviceprincipal_log'.activitydate
+	toColumn: Calendar.Date
+
+relationship 94bbd388-f5dd-4c62-bd87-b52edd21cbe3
+	fromColumn: 'public v_fact_serviceprincipal_log'.activitydate
+	toColumn: Calendar.Date
+
+relationship 78a425a4-2436-4c96-aa6e-fc575d793000
+	fromColumn: 'public v_dim_pbi_datasourcelineage'.datasetid
+	toColumn: 'public v_dim_pbidataset'.datasetid
+
+relationship 98978fd2-01ee-4a91-8ec6-88a6c8e0595c
+	isActive: false
+	fromColumn: 'public v_fact_pbirepublish'.republishdate
+	toColumn: Calendar.Date
+
+relationship b9f83b3c-510c-47b6-bf5c-3f4b1eb13e76
+	isActive: false
+	fromColumn: 'public v_fact_pbiactivity'.activitydate
+	toColumn: Calendar.Date
+
+relationship 7e87f8d6-995b-4c57-b394-d0b0ed27bb92
+	isActive: false
+	fromColumn: 'public v_fact_pbiuniqueuser'.activitydate
+	toColumn: Calendar.Date
+
+relationship 12cc721d-e90e-4d80-924a-10105d6d7c50
+	isActive: false
+	fromColumn: pbimonitorlog.monitordate
+	toColumn: Calendar.Date
+
+relationship AutoDetected_a4db2b33-4e5f-4f51-9e33-f71059edf20a
+	fromColumn: 'public v_fact_workspaceaccess'.itcode
+	toColumn: 'public dim_user_structure'.userid
+
+relationship AutoDetected_fada8bc8-e9a9-4a54-94ea-98f95a3ed755
+	fromColumn: 'public v_fact_pbiactivity'.itcode
+	toColumn: 'public dim_user_structure'.userid
+
+relationship AutoDetected_08c40544-8c64-4990-b4f9-d2cc1ad31d47
+	fromColumn: 'public v_fact_pbirepublish'.itcode
+	toColumn: 'public dim_user_structure'.userid
+
+relationship AutoDetected_f3489bc2-4654-4352-9b25-2afe4f34d6c5
+	fromColumn: 'public v_fact_pbiuniqueuser'.itcode
+	toColumn: 'public dim_user_structure'.userid
+
+relationship AutoDetected_9c7640a2-39d4-4835-85a3-bec3b8635198
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'public v_dim_pbi_copilot_list'.itcode
+	toColumn: 'public dim_user_structure'.userid
+
+relationship fd9f5e96-6430-8a38-4e5b-fb6821be8c94
+	fromColumn: 'dim pro_license_holder'.userid
+	toColumn: 'public dim_user_structure'.userid
+
+relationship AutoDetected_f3a8eb55-bd59-418d-93c0-bc38fb32ea1e
+	isActive: false
+	fromColumn: 'public v_fact_pbi_dataset_similarity'.datasetid1
+	toColumn: 'public v_dim_pbidataset'.datasetid
+
+relationship 41f6e4f2-be01-1b00-a974-c33b6e2aedf7
+	fromColumn: 'public v_fact_pbi_dataset_similarity'.workspaceid1
+	toColumn: 'public v_dim_pbiworkspaces'.workspaceid
+
+relationship AutoDetected_8fe06c92-cf55-44dd-8129-75ffe0e7f8ac
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'public v_check_workspace_owner_new'.workspaceid
+	toColumn: 'public v_dim_pbiworkspaces'.workspaceid
+

@@ -1,0 +1,226 @@
+table 'dim pro_license_holder'
+	lineageTag: a2c339d4-9bf1-4f07-803b-66470c5d1571
+
+	column last_develop_report = ```
+			
+			VAR userid = [User principal name]
+			VAR lastdevdate = CALCULATE(MAX('public v_fact_pbiactivity'[activitymonth]),filter('public v_fact_pbiactivity', 
+			            'public v_fact_pbiactivity'[userid] = userid && 
+			            OR(SEARCH( "Create",[activity],1,0) = 1,SEARCH( "Edit",[activity],1,0) = 1)
+			            ))
+			VAR createdate = FORMAT([When created],"YYYY-MM")
+			VAR result = if(
+			    ISBLANK(lastdevdate),createdate,
+			    lastdevdate)
+			RETURN RESULT
+			```
+		lineageTag: e15117fd-274b-43a3-8989-1bd2dfa6c6dd
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column inactive_as_developer = ```
+			
+			SWITCH(TRUE(),
+			FORMAT([When created],"YYYY-MM")> [3_months_before],"Active",
+			[whitelist] = 1, "Active",
+			SEARCH("VP",[Title],1,0)= 1, "Active",
+			//SEARCH("Director",[Title],1,0)= 1, "Active",
+			SEARCH("SVP",[Title],1,0)= 1, "Active",
+			// [leader_flag] = "Y", "Active",
+			[last_develop_report]<[12_months_before], "> 12 months/Never", 
+			[last_develop_report]<[6_months_before], "> 6 months", 
+			[last_develop_report]<[3_months_before], "> 3 months", 
+			"Active")
+			```
+		lineageTag: 19f8a253-6434-419b-8403-5e89d8000983
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_view = ```
+			
+			VAR userid = [User principal name]
+			VAR lastviewdate = CALCULATE(MAX('public v_fact_pbiactivity'[activitymonth]),filter('public v_fact_pbiactivity', 
+			            'public v_fact_pbiactivity'[userid] = userid))
+			VAR createdate = YEAR([When created]) & "-" & MONTH([When created])
+			VAR result = if(
+			    ISBLANK(lastviewdate),createdate,
+			    lastviewdate)
+			RETURN result
+			```
+		lineageTag: 15f79618-0f55-413f-a6e7-6ca56ea481b4
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column inactive_view = ```
+			
+			SWITCH(TRUE(),
+			FORMAT([When created],"YYYY-MM")> [3_months_before],"Active",
+			[whitelist] = 1, "Active",
+			//SEARCH("Director",[Title],1,0)= 1, "Active",
+			SEARCH("VP",[Title],1,0)= 1, "Active",
+			SEARCH("SVP",[Title],1,0)= 1, "Active",
+			// [leader_flag] = "Y", "Active",
+			[last_view]<[12_months_before], "> 12 months/Never", 
+			[last_view]<[6_months_before], "> 6 months", 
+			[last_view]<[3_months_before], "> 3 months", 
+			"Active")
+			
+			
+			```
+		lineageTag: 10f7632b-b310-410c-82a9-8de4b163f689
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'License Num' =
+			
+			VAR USER = [User principal name]
+			VAR T1=groupby('dim pro_license_holder','dim pro_license_holder'[User principal name],"district_cn", COUNTX(CURRENTGROUP(),'dim pro_license_holder'[District]))//构建排序表
+			VAR T2 = FILTER(T1, [User principal name] = USER)
+			RETURN MAXX(T2,[district_cn])
+		formatString: 0
+		lineageTag: e1265b11-8a93-4ea5-93df-4a1367f34893
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'District Assigned' = if([License Num] = 2, "Both", "Single" )
+		lineageTag: 2c48222d-22e8-44a1-a9ba-f6543dcc8c83
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column userid = ```
+			SUBSTITUTE(lower([User principal name]),"@lenovo.com","") 
+			```
+		lineageTag: a3eef86c-949a-4371-bf95-4e84da63627f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column whitelist = ```
+			
+			var userid = [userid]
+			var result = CALCULATE(count('license_white_list'[userid]), filter('license_white_list', 'license_white_list'[userid] = userid))
+			return result 
+			```
+		formatString: 0
+		lineageTag: e8c0ea9a-1921-4996-a6ce-96905fbbe1b8
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Title =
+			
+			var userid = [userid]
+			return CALCULATE(MAX('public dim_user_structure'[title]), 'public dim_user_structure'[userid] = userid)
+		lineageTag: 55b9f909-8434-4393-8092-383ff0bf741a
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column leader_flag =
+			
+			var userid = [userid]
+			var department = [department]
+			var manager4 = CALCULATE(MAX('public user_structure'[manager4]), 'public dim_user_structure'[userid] = userid)
+			var result = switch( true, department <> "no department" && manager4 = "", "Y", "")
+			return result
+		lineageTag: c6ed67f8-a64e-4a7c-b96c-6d03852aa19b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column department = ```
+			
+			var userid = [userid]
+			return CALCULATE(MAX('public dim_user_structure'[Department]), 'public dim_user_structure'[userid] = userid)
+			
+			```
+		lineageTag: 0b34d419-770a-4af9-9f97-9299d897d63d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column District
+		dataType: string
+		lineageTag: a2041538-8981-483a-8890-99b8f9fe1850
+		summarizeBy: none
+		sourceColumn: District
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'When created'
+		dataType: string
+		lineageTag: 5c728d83-1819-496e-9f99-55c602b62516
+		summarizeBy: none
+		sourceColumn: When created
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'User principal name'
+		dataType: string
+		lineageTag: 34e38802-2817-4b17-ab73-57f37f1bf4eb
+		summarizeBy: none
+		sourceColumn: User principal name
+
+		annotation SummarizationSetBy = Automatic
+
+	column display_name
+		dataType: string
+		lineageTag: 33d01fbd-2506-4019-93af-c171edf5fc50
+		summarizeBy: none
+		sourceColumn: display_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column job_title
+		dataType: string
+		lineageTag: 7ea59322-96cf-41a8-8fb9-f4ee889d5f38
+		summarizeBy: none
+		sourceColumn: job_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column office_location
+		dataType: string
+		lineageTag: 0a17c116-7bb5-45bd-98c0-d5be1a713676
+		summarizeBy: none
+		sourceColumn: office_location
+
+		annotation SummarizationSetBy = Automatic
+
+	column email_group_name
+		dataType: string
+		lineageTag: 4b3a535d-3654-4c92-a1bd-35cb1d0c6eef
+		summarizeBy: none
+		sourceColumn: email_group_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_update_time
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 3cafea1f-d33c-4a02-8c78-950ea281c4c3
+		summarizeBy: none
+		sourceColumn: last_update_time
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'dim pro_license_holder-ad943859-1adf-481d-83b6-0849c7eed37c' = m
+		mode: import
+		queryGroup: 'BICP Tables'
+		source =
+				let
+				    Source = Value.NativeQuery(PostgreSQL.Database("10.122.144.176", "powerbidb"), " select * from v_dim_pbi_pro_license", null, [EnableFolding=true]),
+				    重命名的列 = Table.RenameColumns(Source,{{"when_created", "When created"}, {"environment", "District"}})
+				in
+				    重命名的列
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

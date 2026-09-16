@@ -1,0 +1,47 @@
+model Model
+	culture: zh-CN
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: zh-CN
+	dataAccessOptions
+		fastCombine
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'BICP Tables'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["public v_dim_pbicapacity","public v_dim_pbireport","public v_dim_pbiworkspaces","public v_fact_workspaceaccess","public v_fact_pbiactivity","public v_fact_pbirepublish","dim pro_license_holder","public v_fact_pbiuniqueuser","license_white_list","public v_dim_reportaccess","public v_dim_pbidataset","public v_dim_pbi_datasourcelineage","public dim_user_structure","public v_fact_serviceprincipal_log","v_dim_service_principal","public v_aggr_serviceprincipal_log","public v_dim_gatewayuser","pbimonitorlog","public v_dim_pbi_copilot_list","public user_structure","public v_fact_pbi_dataset_similarity","public v_check_workspace_owner_new"]
+
+annotation PBI_ProTooling = ["DaxCopilot_Change_Accepted_In_Desktop","WebModelingEdit","DaxQueryView_Desktop","DevMode"]
+
+ref table MeasureTable
+ref table Calendar
+ref table 'public v_dim_pbicapacity'
+ref table 'public v_dim_pbireport'
+ref table 'public v_dim_pbiworkspaces'
+ref table 'public v_fact_workspaceaccess'
+ref table 'public v_fact_pbiactivity'
+ref table 'public v_fact_pbirepublish'
+ref table 'dim pro_license_holder'
+ref table 'public v_fact_pbiuniqueuser'
+ref table 'public v_dim_reportaccess'
+ref table 'public v_dim_pbidataset'
+ref table 'public v_dim_pbi_datasourcelineage'
+ref table 'public dim_user_structure'
+ref table 'public v_fact_serviceprincipal_log'
+ref table v_dim_service_principal
+ref table 'public v_aggr_serviceprincipal_log'
+ref table license_white_list
+ref table 'public v_dim_gatewayuser'
+ref table User_Active
+ref table pbimonitorlog
+ref table 'public v_dim_pbi_copilot_list'
+ref table 'public user_structure'
+ref table 'public v_fact_pbi_dataset_similarity'
+ref table 'public v_check_workspace_owner_new'
+
+ref cultureInfo zh-CN
+

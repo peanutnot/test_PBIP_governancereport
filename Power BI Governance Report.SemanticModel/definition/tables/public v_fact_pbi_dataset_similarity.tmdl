@@ -1,0 +1,152 @@
+table 'public v_fact_pbi_dataset_similarity'
+	lineageTag: 6bf284bc-2049-4e33-bc36-426532b960fa
+
+	column district1
+		dataType: string
+		lineageTag: b9bd2029-7ac7-4712-b934-de6b41399d5b
+		summarizeBy: none
+		sourceColumn: district1
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetid1
+		dataType: string
+		lineageTag: 6f801b30-bc2b-48e7-b204-4323a1477e4f
+		summarizeBy: none
+		sourceColumn: datasetid1
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetname1
+		dataType: string
+		lineageTag: 22eeca12-601e-4ad7-a144-391f4eeadf37
+		summarizeBy: none
+		sourceColumn: datasetname1
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid1
+		dataType: string
+		lineageTag: e1bd8e26-c2d8-4f3c-b2b6-18a6848ecd89
+		summarizeBy: none
+		sourceColumn: workspaceid1
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspacename1
+		dataType: string
+		lineageTag: 30fd9b5e-2e4d-4b55-8886-3d1866c0d1e5
+		summarizeBy: none
+		sourceColumn: workspacename1
+
+		annotation SummarizationSetBy = Automatic
+
+	column environment1
+		dataType: string
+		lineageTag: 98c78d1c-6a4d-45a0-9300-0a52a53b0698
+		summarizeBy: none
+		sourceColumn: environment1
+
+		annotation SummarizationSetBy = Automatic
+
+	column district2
+		dataType: string
+		lineageTag: f08d3f43-029e-410f-aec3-ddb911705324
+		summarizeBy: none
+		sourceColumn: district2
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetid2
+		dataType: string
+		lineageTag: 0eb5e26e-eac2-4509-bd5b-29bca5c691d2
+		summarizeBy: none
+		sourceColumn: datasetid2
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetname2
+		dataType: string
+		lineageTag: 63219287-2ed6-41c0-af04-18d7a9f04958
+		summarizeBy: none
+		sourceColumn: datasetname2
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspaceid2
+		dataType: string
+		lineageTag: 7896e488-daa3-4ae3-90d7-29316a950731
+		summarizeBy: none
+		sourceColumn: workspaceid2
+
+		annotation SummarizationSetBy = Automatic
+
+	column workspacename2
+		dataType: string
+		lineageTag: dc8dd45a-ba9a-4855-9c23-62a983153f73
+		summarizeBy: none
+		sourceColumn: workspacename2
+
+		annotation SummarizationSetBy = Automatic
+
+	column environment2
+		dataType: string
+		lineageTag: 318ac67f-2b78-49f8-8edd-93b65264aae9
+		summarizeBy: none
+		sourceColumn: environment2
+
+		annotation SummarizationSetBy = Automatic
+
+	column similarity_score
+		dataType: double
+		lineageTag: 15defce2-13f7-4675-93d9-400cb605c187
+		summarizeBy: sum
+		sourceColumn: similarity_score
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column datasetowner1 =
+			
+			var datasetid1 = 'public v_fact_pbi_dataset_similarity'[datasetid1]
+			return CALCULATE(max('public v_dim_pbidataset'[datasetowner]), filter(all('public v_dim_pbidataset'),'public v_dim_pbidataset'[datasetid] = datasetid1))
+		lineageTag: 3016a437-15e2-45f9-a66e-9fb55f833896
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column datasetowner2 =
+			
+			var datasetid2 = 'public v_fact_pbi_dataset_similarity'[datasetid2]
+			return CALCULATE(max('public v_dim_pbidataset'[datasetowner]), filter(all('public v_dim_pbidataset'),'public v_dim_pbidataset'[datasetid] = datasetid2))
+		lineageTag: b31c52f1-12ed-4136-8c95-2f7b93a1cd78
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column score_cat =
+			
+			switch(true,
+			'public v_fact_pbi_dataset_similarity'[similarity_score] = 100, "100",
+			'public v_fact_pbi_dataset_similarity'[similarity_score] > 95, "95-99",
+			"90-94"
+			)
+		lineageTag: 09047a9f-4a21-4380-93f7-3893429eac56
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'public v_fact_pbi_dataset_similarity' = m
+		mode: import
+		source =
+				let
+				    Source = PostgreSQL.Database("10.122.144.176", "powerbidb"),
+				    public_v_fact_pbi_dataset_similarity = Source{[Schema="public",Item="v_fact_pbi_dataset_similarity"]}[Data]
+				in
+				    public_v_fact_pbi_dataset_similarity
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
